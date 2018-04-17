@@ -2,9 +2,9 @@
 public class Rating {
 	private int userID;
 	private int movieID;
-	private int rating;
+	private double rating;
 	
-	public Rating(int userID, int movieID, int rating) {
+	public Rating(int userID, int movieID, double rating) {
 		this.userID = userID;
 		this.movieID = movieID;
 		this.rating = rating;
@@ -27,7 +27,7 @@ public class Rating {
 	/**
 	 * @return the rating
 	 */
-	public int getRating() {
+	public double getRating() {
 		return rating;
 	}
 	

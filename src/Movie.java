@@ -1,6 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author sgb
+ *
+ */
 public class Movie {
 	private int movieID;
 	private String movieName;
@@ -24,6 +28,13 @@ public class Movie {
 	 */
 	public String getMovieName() {
 		return movieName;
+	}
+
+	/**
+	 * @param userRatings the userRatings to set
+	 */
+	public void setUserRatings(Map<User, Integer> userRatings) {
+		this.userRatings = userRatings;
 	}
 
 	/**
