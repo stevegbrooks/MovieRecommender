@@ -8,7 +8,7 @@ import java.util.Map;
 public class Movie {
 	private int movieID;
 	private String movieName;
-	private Map<User, Integer> userRatings;
+	private Map<Integer, Double> userRatings;
 	
 	public Movie(int movieID, String movieName) {
 		this.movieID = movieID;
@@ -33,14 +33,14 @@ public class Movie {
 	/**
 	 * @param userRatings the userRatings to set
 	 */
-	public void setUserRatings(Map<User, Integer> userRatings) {
+	public void setUserRatings(Map<Integer, Double> userRatings) {
 		this.userRatings = userRatings;
 	}
 
 	/**
 	 * @return the userRatings
 	 */
-	public Map<User, Integer> getUserRatings() {
+	public Map<Integer, Double> getUserRatings() {
 		return userRatings;
 	}
 	

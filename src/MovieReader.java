@@ -1,5 +1,5 @@
-import java.util.List;
+import java.util.Set;
 
 public abstract class MovieReader {
-	public abstract List<Movie> read();
+	public abstract Set<Movie> read();
 }

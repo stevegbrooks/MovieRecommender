@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -7,11 +8,11 @@ import java.util.Map;
  */
 public class User {
 	private int userID;
-	private Map<Movie, Integer> ratings;
+	private Map<Integer, Double> movieRatings;
 	
-	public User(int userID, Map<Movie, Integer> ratings) {
+	public User(int userID) {
 		this.userID = userID;
-		this.ratings = ratings;
+		movieRatings = new HashMap<>();
 	}
 
 	/**
@@ -24,8 +25,14 @@ public class User {
 	/**
 	 * @return the ratings
 	 */
-	public Map<Movie, Integer> getRatings() {
-		return ratings;
+	public Map<Integer, Double> getMovieRatings() {
+		return movieRatings;
 	}
-	
+
+	/**
+	 * @param movieRatings the movieRatings to set
+	 */
+	public void setMovieRatings(Map<Integer, Double> movieRatings) {
+		this.movieRatings = movieRatings;
+	}
 }

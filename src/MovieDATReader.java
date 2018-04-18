@@ -3,7 +3,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MovieDATReader extends MovieReader {
 	private String fileName;
@@ -13,10 +15,10 @@ public class MovieDATReader extends MovieReader {
 	}
 
 	@Override
-	public List<Movie> read() {
+	public Set<Movie> read() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
-			List<Movie> movies = new ArrayList<Movie>();
+			Set<Movie> movies = new HashSet<Movie>();
 			String line = new String();
 			while ((line = br.readLine()) != null) {
 				String[] ls = line.split("::");
