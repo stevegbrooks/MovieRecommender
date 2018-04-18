@@ -1,24 +1,26 @@
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class UserInterface {
 
 	public static void main(String[] args) {
+		System.out.println("Start Reading:" + Instant.now());
 		RatingDataManager rdm = new RatingDataManager("ratings.dat");
-		//MoviesDataManager mdm = new MoviesDataManager("movies.dat", "ratings.dat");
+		System.out.println("End Reading:" + Instant.now());
 		
-		Set<User> users = rdm.getUsersDataLayer();
-		//Set<Movie> movies = mdm.getMoviesDataLayer();
-		//Set<Rating> ratings = mdm.getRatingsDataLayer();
+		Map<User, Map<Movie, Rating>> users = rdm.getUsersDataLayer();
 		
 		int counter = 0;
-		for (User user : users) {
-			Map<Integer, Double> movieRatings = user.getMovieRatings();
-			System.out.println(user.getUserID() + ":");
-			System.out.println("==========");
-			System.out.println(movieRatings.toString());
-			counter += 1;
-			if (counter == 10) {
+		for (User user : users.keySet()) {
+			Map<Movie, Rating> movieRatings = new HashMap<>();
+			movieRatings = users.get(user);
+			System.out.println(user.toString());
+			System.out.println("# of Ratings: " + movieRatings.size());
+			System.out.println("Ratings: " + movieRatings.toString());
+			System.out.println("=========");
+			counter++;
+			if (counter > 9) {
 				break;
 			}
 		}

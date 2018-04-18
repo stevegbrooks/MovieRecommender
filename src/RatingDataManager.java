@@ -1,6 +1,5 @@
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class will operate the RatingsReader and
@@ -11,38 +10,26 @@ import java.util.Set;
  *
  */
 public class RatingDataManager implements DataManager{
-	private RatingsReader ratingsReader;
-	private Set<Rating> ratings;
-	private Set<User> users;
+	private RatingReader ratingsReader;
+	private List<Rating> ratings;
+	private Map<User, Map<Movie, Rating>> users;
 	
 	public RatingDataManager(String ratingsFile) {
-		ratingsReader = new RatingsDATReader(ratingsFile);
+		ratingsReader = new RatingDATReader(ratingsFile);
 		ratings = ratingsReader.read();
-		users = ratingsReader.getUsers();
+		users = ratingsReader.getUsersDataLayer();
 		createDataLayer();
 	}
 
 	@Override
 	public void createDataLayer() {
-		Map<Integer, Double> movieRatings = new HashMap<>();
-		for (User user : users) {
-			Integer userID_PK = user.getUserID();
-			for (Rating rating : ratings) {
-				Integer userID_FK = rating.getUserID();
-				Integer movieID_FK = rating.getMovieID();
-				if (userID_FK == userID_PK) {
-					movieRatings.put(movieID_FK, rating.getRating());
-				}
-			}
-			user.setMovieRatings(movieRatings);
-		}
 	}
 	
-	public Set<User> getUsersDataLayer() {
+	public Map<User, Map<Movie, Rating>> getUsersDataLayer() {
 		return users;
 	}
 	
-	public Set<Rating> getRatingsDataLayer() {
+	public List<Rating> getRatingsDataLayer() {
 		return ratings;
 	}
 

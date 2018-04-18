@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 /**
@@ -11,15 +12,15 @@ import java.util.Set;
  * @author sgb
  *
  */
-public class MoviesDataManager implements DataManager {
+public class MovieDataManager implements DataManager {
 	private MovieReader movieReader;
-	private RatingsReader ratingsReader;
-	private Set<Rating> ratings;
+	private RatingReader ratingsReader;
+	private List<Rating> ratings;
 	private Set<Movie> movies;
 
-	public MoviesDataManager(String moviesFileName, String ratingsFileName) {
+	public MovieDataManager(String moviesFileName, String ratingsFileName) {
 		movieReader = new MovieDATReader(moviesFileName);
-		ratingsReader = new RatingsDATReader(ratingsFileName);
+		ratingsReader = new RatingDATReader(ratingsFileName);
 		movies = movieReader.read();
 		ratings = ratingsReader.read();
 		
@@ -28,8 +29,8 @@ public class MoviesDataManager implements DataManager {
 
 	@Override
 	public void createDataLayer() {
-		Map<Integer, Double> userRatings = new HashMap<>();
 		for (Movie movie : movies) {
+			Map<Integer, Double> userRatings = new HashMap<>();
 			Integer movieID_PK = movie.getMovieID();
 			for (Rating rating : ratings) {
 				Integer movieID_FK = rating.getMovieID();
@@ -46,9 +47,5 @@ public class MoviesDataManager implements DataManager {
 		return movies;
 	}
 	
-	@Override
-	public Set<Rating> getRatingsDataLayer() {
-		return ratings;
-	}
 
 }
