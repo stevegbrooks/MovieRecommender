@@ -6,7 +6,7 @@ public class UserInterface {
 
 	public static void main(String[] args) {
 		System.out.println("Start Reading:" + Instant.now());
-		DataManager rdm = new DataManager("ratings.dat", "movies.dat");
+		DataManager rdm = new DataManager("ratingsTest.dat", "moviesTest.dat");
 		System.out.println("End Reading:" + Instant.now());
 		
 		System.out.println("Start DataManager:" + Instant.now());

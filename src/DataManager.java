@@ -18,6 +18,7 @@ public class DataManager {
 	private Map<Movie, String> movieNames;
 	private Map<User, Map<Movie, Double>> usersAndRatings;
 	private Map<Movie, Map<User, Double>> moviesAndRatings;
+	private Logger log;
 
 	public DataManager(String ratingsFile, String movieNamesFile) {
 		ratingReader = new RatingDATReader(ratingsFile);
@@ -28,6 +29,10 @@ public class DataManager {
 
 		usersAndRatings = new HashMap<>();
 		moviesAndRatings = new HashMap<>();
+		
+		log = Logger.getInstance();
+		log.setMessage("DataManager: DataManager instantiated.");
+		log.printToLog();
 	}
 
 	public Map<User, Map<Movie, Double>> getUsersAndRatings() {
@@ -60,6 +65,8 @@ public class DataManager {
 			} 
 			iterationCounter++;
 		}
+		log.setMessage("DataManager: Successfully created 'Users and Movie Ratings' data layer.");
+		log.printToLog();
 		return usersAndRatings;
 	}
 
@@ -96,6 +103,8 @@ public class DataManager {
 			}
 			iterationCounter++;
 		}
+		log.setMessage("DataManager: Successfully created 'Movies and User Ratings' data layer.");
+		log.printToLog();
 		return moviesAndRatings;
 	}
 }
