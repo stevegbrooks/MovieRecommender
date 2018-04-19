@@ -2,28 +2,26 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MovieDATReader extends MovieReader {
+public class MovieNamesDATReader {
 	private String fileName;
 	
-	public MovieDATReader(String fileName) {
+	public MovieNamesDATReader(String fileName) {
 		this.fileName = fileName;
 	}
 
-	@Override
-	public Set<Movie> read() {
+	public Map<Movie, String> read() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
-			Set<Movie> movies = new HashSet<Movie>();
+			Map<Movie, String> movies = new HashMap<>();
 			String line = new String();
 			while ((line = br.readLine()) != null) {
 				String[] ls = line.split("::");
 				int movieID = Integer.parseInt(ls[0]);
 				String movieName = ls[1];
-				movies.add(new Movie(movieID, movieName));
+				movies.put(new Movie(movieID), movieName);
 			}
 			br.close();
 			return movies;

@@ -1,31 +1,31 @@
 
-public class Rating implements Comparable<Rating> {
-	private int userID;
-	private int movieID;
+public class RatingTuple implements Comparable<RatingTuple> {
+	private User user;
+	private Movie movie;
 	private double rating;
 	
-	public Rating(int userID, int movieID, double rating) {
-		this.userID = userID;
-		this.movieID = movieID;
+	public RatingTuple(User user, Movie movie, double rating) {
+		this.user = user;
+		this.movie = movie;
 		this.rating = rating;
 	}
 	
-	public Rating(double rating) {
+	public RatingTuple(double rating) {
 		this.rating = rating;
 	}
 
 	/**
 	 * @return the userID
 	 */
-	public int getUserID() {
-		return userID;
+	public User getUser() {
+		return user;
 	}
 
 	/**
 	 * @return the movieID
 	 */
-	public int getMovieID() {
-		return movieID;
+	public Movie getMovie() {
+		return movie;
 	}
 
 	/**
@@ -42,11 +42,11 @@ public class Rating implements Comparable<Rating> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + movieID;
+		result = prime * result + movie.getMovieID();
 		long temp;
 		temp = Double.doubleToLongBits(rating);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + userID;
+		result = prime * result + user.getUserID();
 		return result;
 	}
 
@@ -61,23 +61,23 @@ public class Rating implements Comparable<Rating> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Rating other = (Rating) obj;
-		if (movieID != other.movieID)
+		RatingTuple other = (RatingTuple) obj;
+		if (movie.getMovieID() != other.movie.getMovieID())
 			return false;
 		if (Double.doubleToLongBits(rating) != Double.doubleToLongBits(other.rating))
 			return false;
-		if (userID != other.userID)
+		if (user.getUserID() != other.user.getUserID())
 			return false;
 		return true;
 	}
 
 	@Override
-	public int compareTo(Rating otherRating) {
-		if (this.userID != otherRating.getUserID()) {
-			return this.userID - otherRating.getUserID();
+	public int compareTo(RatingTuple otherRating) {
+		if (this.user.getUserID() != otherRating.user.getUserID()) {
+			return this.user.getUserID() - otherRating.user.getUserID();
 		} else {
-			if (this.movieID != otherRating.getUserID()) {
-				return this.movieID - otherRating.getMovieID();
+			if (this.movie.getMovieID() != otherRating.user.getUserID()) {
+				return this.movie.getMovieID() - otherRating.movie.getMovieID();
 			} else {
 				double ratingDiff = this.rating - otherRating.getRating();
 				if (ratingDiff < 0) {
@@ -90,10 +90,4 @@ public class Rating implements Comparable<Rating> {
 			}
 		}
 	}
-	
-	@Override
-	public String toString() {
-		return ("Rating = " + rating);
-	}
-	
 }

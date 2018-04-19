@@ -1,6 +1,3 @@
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author sgb
  *
@@ -8,18 +5,10 @@ import java.util.Map;
 public class Movie implements Comparable<Movie> {
 	private int movieID;
 	private String movieName;
-	private Map<Integer, Double> userRatings;
-	
-	public Movie(int movieID, String movieName) {
-		this.movieID = movieID;
-		this.movieName = movieName;
-		userRatings = new HashMap<>();
-	}
 	
 	public Movie(int movieID) {
 		this.movieID = movieID;
 		this.movieName = new String();
-		userRatings = new HashMap<>();
 	}
 
 	/**
@@ -37,17 +26,10 @@ public class Movie implements Comparable<Movie> {
 	}
 
 	/**
-	 * @param userRatings the userRatings to set
+	 * @param movieName the movieName to set
 	 */
-	public void setUserRatings(Map<Integer, Double> userRatings) {
-		this.userRatings = userRatings;
-	}
-
-	/**
-	 * @return the userRatings
-	 */
-	public Map<Integer, Double> getUserRatings() {
-		return userRatings;
+	public void setMovieName(String movieName) {
+		this.movieName = movieName;
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +67,11 @@ public class Movie implements Comparable<Movie> {
 	
 	@Override
 	public String toString() {
-		return ("Movie ID = " + movieID);
+		if (movieName != null) {
+			return (String) movieName;
+		} else {
+			return ("MovieID: " + movieID);
+		}
 	}
 
 	
