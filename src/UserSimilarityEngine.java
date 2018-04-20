@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,10 +14,10 @@ public class UserSimilarityEngine {
 		log.setMessage("UserSimilarityEngine::UserSimilarityEngine instantiated.");
 		log.printToLog();
 	}
-	
-	public double pearsonCorrelation(User user1, User user2, Map<User, Map<Movie, Double>> usersAndRatings) {
-		Map<Movie, Double> user1Ratings = usersAndRatings.get(user1);
-		Map<Movie, Double> user2Ratings = usersAndRatings.get(user2);
+		
+	public double pearsonCorrelation(User user1, User user2) {
+		Map<Movie, Double> user1Ratings = user1.getMovieRatings();
+		Map<Movie, Double> user2Ratings = user2.getMovieRatings();
 		
 		double sumU1 = 0;
 		double sumU2 = 0;

@@ -1,7 +1,9 @@
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class will operate the RatingsReader and
@@ -16,8 +18,8 @@ public class DataManager {
 	private MovieNamesDATReader movieNameReader;
 	private List<RatingTuple> ratings;
 	private Map<Movie, String> movieNames;
-	private Map<User, Map<Movie, Double>> usersAndRatings;
-	private Map<Movie, Map<User, Double>> moviesAndRatings;
+	private Set<User> usersAndRatings;
+	private Set<Movie> moviesAndRatings;
 	private Logger log;
 
 	public DataManager(String ratingsFile, String movieNamesFile) {
@@ -27,45 +29,40 @@ public class DataManager {
 		ratings = ratingReader.read();
 		movieNames = movieNameReader.read();
 
-		usersAndRatings = new HashMap<>();
-		moviesAndRatings = new HashMap<>();
+		usersAndRatings = new HashSet<>();
+		moviesAndRatings = new HashSet<>();
 		
 		log = Logger.getInstance();
 		log.setMessage("DataManager::DataManager instantiated.");
 		log.printToLog();
 	}
 
-	public Map<User, Map<Movie, Double>> getUsersAndRatings() {
+	public Set<User> getUsersAndRatings() {
 		Collections.sort(ratings, new RatingUserIDComparator());
 		Map<Movie, Double> movieRatings = new HashMap<>();
 		
 		User user = ratings.get(0).getUser();
 		int listLastIndex = ratings.size() - 1;
 		int iterationCounter = 0;
-		double ratingTotal = 0;
 		
 		for (RatingTuple rating : ratings) {
 
 			User currentUser = rating.getUser();
 			if (currentUser.compareTo(user) == 0 && iterationCounter < listLastIndex) {
 			
-				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 			
 			} else if (currentUser.compareTo(user) == 0 && iterationCounter == listLastIndex) {
 				
-				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
-				usersAndRatings.put(user, movieRatings);
-				user.setMeanRating(ratingTotal/movieRatings.size());
+				user.setMovieRatings(movieRatings);
+				usersAndRatings.add(user);
 			
 			} else if (currentUser.compareTo(user) != 0) {
 				
-				usersAndRatings.put(user, movieRatings);
-				user.setMeanRating(ratingTotal/movieRatings.size());
+				user.setMovieRatings(movieRatings);
+				usersAndRatings.add(user);
 				movieRatings = new HashMap<>();
-				ratingTotal = 0;
-				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 				user = currentUser;
 			
@@ -77,16 +74,15 @@ public class DataManager {
 		return usersAndRatings;
 	}
 
-	public Map<Movie, Map<User, Double>> getMoviesAndRatings() {
+	public Set<Movie> getMoviesAndRatings() {
 		Collections.sort(ratings, new RatingMovieIDComparator());
 		Map<User, Double> userRatings = new HashMap<>();
 		
-		Movie movie = ratings.get(0).getMovie();
-		movie.setMovieName(movieNames.get(movie));
-		
 		int listLastIndex = ratings.size() - 1;
 		int iterationCounter = 0;
-		double ratingTotal = 0;
+		
+		Movie movie = ratings.get(0).getMovie();
+		movie.setMovieName(movieNames.get(movie));
 
 		for (RatingTuple rating : ratings) {
 			
@@ -95,33 +91,28 @@ public class DataManager {
 			
 			if (currentMovie.compareTo(movie) == 0 && iterationCounter < listLastIndex) {
 				
-				ratingTotal += rating.getRating();
 				userRatings.put(rating.getUser(), rating.getRating());
 			
 			} else if (currentMovie.compareTo(movie) == 0 && iterationCounter == listLastIndex) {
 				
-				ratingTotal += rating.getRating();
 				userRatings.put(rating.getUser(), rating.getRating());
-				moviesAndRatings.put(movie, userRatings);
-				movie.setMeanRating(ratingTotal/userRatings.size());
+				movie.setUserRatings(userRatings);
+				moviesAndRatings.add(movie);
 				
 			} else if (currentMovie.compareTo(movie) != 0 && iterationCounter == listLastIndex) {
 				
-				moviesAndRatings.put(movie, userRatings);
+				movie.setUserRatings(userRatings);
+				moviesAndRatings.add(movie);
 				userRatings = new HashMap<>();
-				ratingTotal = 0;
-				ratingTotal += rating.getRating();
 				userRatings.put(rating.getUser(), rating.getRating());
-				moviesAndRatings.put(currentMovie, userRatings);
-				currentMovie.setMeanRating(ratingTotal);
+				currentMovie.setUserRatings(userRatings);
+				moviesAndRatings.add(currentMovie);
 			
 			} else if (currentMovie.compareTo(movie) != 0) {
 				
-				moviesAndRatings.put(movie, userRatings);
-				movie.setMeanRating(ratingTotal/userRatings.size());
+				movie.setUserRatings(userRatings);
+				moviesAndRatings.add(movie);
 				userRatings = new HashMap<>();
-				ratingTotal = 0;
-				ratingTotal += rating.getRating();
 				userRatings.put(rating.getUser(), rating.getRating());
 				movie = currentMovie;
 				

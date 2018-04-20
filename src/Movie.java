@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author sgb
  *
@@ -5,12 +8,28 @@
 public class Movie implements Comparable<Movie> {
 	private int movieID;
 	private String movieName;
+	private Map<User, Double> userRatings;
 	private double meanRating;
 	
 	public Movie(int movieID) {
 		this.movieID = movieID;
 		this.movieName = new String();
+		userRatings = new HashMap<>();
 		meanRating = 0;
+	}
+	
+	/**
+	 * @return the userRatings
+	 */
+	public Map<User, Double> getUserRatings() {
+		return userRatings;
+	}
+
+	/**
+	 * @param userRatings the userRatings to set
+	 */
+	public void setUserRatings(Map<User, Double> userRatings) {
+		this.userRatings = userRatings;
 	}
 
 	/**
