@@ -1,34 +1,35 @@
-import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserInterface {
 
 	public static void main(String[] args) {
-		System.out.println("Start Reading:" + Instant.now());
 		DataManager rdm = new DataManager("ratingsTest.dat", "moviesTest.dat");
-		System.out.println("End Reading:" + Instant.now());
+		UserSimilarityEngine use = new UserSimilarityEngine();
 		
-		System.out.println("Start DataManager:" + Instant.now());
+		
 		Map<User, Map<Movie, Double>> usersAndRatings = rdm.getUsersAndRatings();
 		Map<Movie, Map<User, Double>> moviesAndRatings = rdm.getMoviesAndRatings();
-		System.out.println("End DataManager:" + Instant.now());
 		
+		
+		List<User> users = new ArrayList<>();
 		int counter = 0;
 		for (User user : usersAndRatings.keySet()) {
+			users.add(user);
 			Map<Movie, Double> movieRatings = new HashMap<>();
 			movieRatings = usersAndRatings.get(user);
 			System.out.println(user.toString());
+			System.out.println("User's mean rating: " + user.getMeanRating());
 			System.out.println("# of Ratings: " + movieRatings.size());
 			System.out.println("Ratings: " + movieRatings.toString());
 			System.out.println("=========");
-			counter++;
-			if (counter > 0) {
-				break;
-			}
 		}
 		
+		
 		counter = 0;
+		System.out.println(moviesAndRatings.size());
 		for (Movie movie : moviesAndRatings.keySet()) {
 			Map<User, Double> userRatings = new HashMap<>();
 			userRatings = moviesAndRatings.get(movie);
@@ -37,9 +38,6 @@ public class UserInterface {
 			System.out.println("Ratings: " + userRatings.toString());
 			System.out.println("=========");
 			counter++;
-			if (counter > 2) {
-				break;
-			}
 		}
 	}
 }

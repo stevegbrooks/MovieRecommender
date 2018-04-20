@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
 
 /**
  * This is a singleton implementation of a logger.
@@ -40,7 +41,7 @@ public class Logger {
 	public void printToLog() {
 		try {
 			FileWriter fileWriter = new FileWriter(Logger.fileName, true);
-			fileWriter.write(message);
+			fileWriter.write(Instant.now() + "::" + message);
 			fileWriter.write(String.format("%n"));
 			fileWriter.close();
 		} catch (IOException e) {

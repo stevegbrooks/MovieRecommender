@@ -7,9 +7,13 @@ import java.util.Map;
 
 public class MovieNamesDATReader {
 	private String fileName;
+	private Logger log;
 	
 	public MovieNamesDATReader(String fileName) {
 		this.fileName = fileName;
+		log = Logger.getInstance();
+		log.setMessage("MovieNamesDATReader::MovieNamesDATReader instantiated.");
+		log.printToLog();
 	}
 
 	public Map<Movie, String> read() {
@@ -24,6 +28,8 @@ public class MovieNamesDATReader {
 				movies.put(new Movie(movieID), movieName);
 			}
 			br.close();
+			log.setMessage("MovieNamesDATReader::Movie names file successfully read.");
+			log.printToLog();
 			return movies;
 		} catch (IOException e) {
 			System.out.println("ERROR: IO Exception on movie dat input file - " + fileName);

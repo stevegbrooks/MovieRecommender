@@ -7,9 +7,13 @@ import java.util.List;
 
 public class RatingDATReader extends Reader<RatingTuple> {
 	private String fileName;
+	private Logger log;
 	
 	public RatingDATReader(String fileName) {
 		this.fileName = fileName;
+		log = Logger.getInstance();
+		log.setMessage("RatingDATReader::RatingDATReader instantiated.");
+		log.printToLog();
 	}
 	
 	@Override
@@ -29,6 +33,8 @@ public class RatingDATReader extends Reader<RatingTuple> {
 				ratings.add(new RatingTuple(new User(currentUserID), new Movie(currentMovieID), currentRating));
 			}
 			br.close();
+			log.setMessage("RatingDATReader::Ratings file successfully read.");
+			log.printToLog();
 			return ratings;
 		} catch (IOException e) {
 			System.out.println("ERROR: IO Exception on movie dat input file - " + fileName);

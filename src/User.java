@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Basic POJO to store User information from the 'ratings.dat' file.
  * @author sgb
@@ -5,9 +8,25 @@
  */
 public class User implements Comparable<User> {
 	private int userID;
+	private double meanRating;
 	
 	public User(int userID) {
 		this.userID = userID;
+		meanRating = 0;
+	}
+
+	/**
+	 * @return the meanRating
+	 */
+	public double getMeanRating() {
+		return meanRating;
+	}
+
+	/**
+	 * @param meanRating the meanRating to set
+	 */
+	public void setMeanRating(double meanRating) {
+		this.meanRating = meanRating;
 	}
 
 	/**
@@ -58,4 +77,6 @@ public class User implements Comparable<User> {
 	public String toString() {
 		return "User ID = " + userID;
 	}
+	
+	
 }

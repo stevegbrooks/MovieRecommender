@@ -31,7 +31,7 @@ public class DataManager {
 		moviesAndRatings = new HashMap<>();
 		
 		log = Logger.getInstance();
-		log.setMessage("DataManager: DataManager instantiated.");
+		log.setMessage("DataManager::DataManager instantiated.");
 		log.printToLog();
 	}
 
@@ -42,30 +42,37 @@ public class DataManager {
 		User user = ratings.get(0).getUser();
 		int listLastIndex = ratings.size() - 1;
 		int iterationCounter = 0;
+		double ratingTotal = 0;
 		
 		for (RatingTuple rating : ratings) {
 
 			User currentUser = rating.getUser();
 			if (currentUser.compareTo(user) == 0 && iterationCounter < listLastIndex) {
 			
+				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 			
 			} else if (currentUser.compareTo(user) == 0 && iterationCounter == listLastIndex) {
 				
+				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 				usersAndRatings.put(user, movieRatings);
+				user.setMeanRating(ratingTotal/movieRatings.size());
 			
 			} else if (currentUser.compareTo(user) != 0) {
 				
 				usersAndRatings.put(user, movieRatings);
+				user.setMeanRating(ratingTotal/movieRatings.size());
 				movieRatings = new HashMap<>();
+				ratingTotal = 0;
+				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 				user = currentUser;
 			
 			} 
 			iterationCounter++;
 		}
-		log.setMessage("DataManager: Successfully created 'Users and Movie Ratings' data layer.");
+		log.setMessage("DataManager::Successfully created 'Users and Movie Ratings' data layer.");
 		log.printToLog();
 		return usersAndRatings;
 	}
@@ -79,6 +86,7 @@ public class DataManager {
 		
 		int listLastIndex = ratings.size() - 1;
 		int iterationCounter = 0;
+		double ratingTotal = 0;
 
 		for (RatingTuple rating : ratings) {
 			
@@ -87,23 +95,40 @@ public class DataManager {
 			
 			if (currentMovie.compareTo(movie) == 0 && iterationCounter < listLastIndex) {
 				
+				ratingTotal += rating.getRating();
 				userRatings.put(rating.getUser(), rating.getRating());
 			
 			} else if (currentMovie.compareTo(movie) == 0 && iterationCounter == listLastIndex) {
 				
+				ratingTotal += rating.getRating();
 				userRatings.put(rating.getUser(), rating.getRating());
+				moviesAndRatings.put(movie, userRatings);
+				movie.setMeanRating(ratingTotal/userRatings.size());
 				
-			} else if (currentMovie.compareTo(movie) != 0) {
+			} else if (currentMovie.compareTo(movie) != 0 && iterationCounter == listLastIndex) {
 				
 				moviesAndRatings.put(movie, userRatings);
 				userRatings = new HashMap<>();
+				ratingTotal = 0;
+				ratingTotal += rating.getRating();
+				userRatings.put(rating.getUser(), rating.getRating());
+				moviesAndRatings.put(currentMovie, userRatings);
+				currentMovie.setMeanRating(ratingTotal);
+			
+			} else if (currentMovie.compareTo(movie) != 0) {
+				
+				moviesAndRatings.put(movie, userRatings);
+				movie.setMeanRating(ratingTotal/userRatings.size());
+				userRatings = new HashMap<>();
+				ratingTotal = 0;
+				ratingTotal += rating.getRating();
 				userRatings.put(rating.getUser(), rating.getRating());
 				movie = currentMovie;
-			
+				
 			}
 			iterationCounter++;
 		}
-		log.setMessage("DataManager: Successfully created 'Movies and User Ratings' data layer.");
+		log.setMessage("DataManager::Successfully created 'Movies and User Ratings' data layer.");
 		log.printToLog();
 		return moviesAndRatings;
 	}
