@@ -8,11 +8,27 @@ import java.util.Map;
  */
 public class User implements Comparable<User> {
 	private int userID;
+	private double avgRating;
 	private Map<Movie, Double> movieRatings;
 	
 	public User(int userID) {
 		this.userID = userID;
+		this.avgRating = 0;
 		movieRatings = new HashMap<>();
+	}
+
+	/**
+	 * @return the avgRating
+	 */
+	public double getAvgRating() {
+		return avgRating;
+	}
+
+	/**
+	 * @param avgRating the avgRating to set
+	 */
+	public void setAvgRating(double avgRating) {
+		this.avgRating = avgRating;
 	}
 
 	/**

@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class will be used by MovieRatingsPredictor
@@ -14,8 +18,34 @@ public class UserSimilarityEngine {
 		log.setMessage("UserSimilarityEngine::UserSimilarityEngine instantiated.");
 		log.printToLog();
 	}
+	
+	public List<Neighbor> getUserNeighborhood(User userOfInterest, Movie movieOfInterest, Set<User> otherUsers, int neighborhoodSize) {
+		List<Neighbor> neighborhood = new ArrayList<>();
 		
-	public double pearsonCorrelation(User user1, User user2) {
+		for (User otherUser : otherUsers) {
+			if (otherUser.compareTo(userOfInterest) != 0) {
+				Map<Movie, Double> otherUsersRatings = otherUser.getMovieRatings();
+				boolean hasMovie = false;
+				
+				for (Movie movie : otherUsersRatings.keySet()) {
+					if (movie.compareTo(movieOfInterest) == 0) {
+						hasMovie = true;
+						break;
+					}
+				}
+				
+				if (hasMovie) {
+					double pearsonCoeff = getPearsonCorrelation(userOfInterest, otherUser);
+					neighborhood.add(new Neighbor(otherUser, pearsonCoeff));
+				}
+			}
+		}
+		Collections.sort(neighborhood);
+		List<Neighbor> neighborhoodSlice = neighborhood.subList(0, neighborhoodSize - 1);
+		return neighborhoodSlice;
+	}
+		
+	private double getPearsonCorrelation(User user1, User user2) {
 		Map<Movie, Double> user1Ratings = user1.getMovieRatings();
 		Map<Movie, Double> user2Ratings = user2.getMovieRatings();
 		

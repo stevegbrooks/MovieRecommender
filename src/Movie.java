@@ -13,7 +13,7 @@ public class Movie implements Comparable<Movie> {
 	
 	public Movie(int movieID) {
 		this.movieID = movieID;
-		this.movieName = new String();
+		this.movieName = null;
 		userRatings = new HashMap<>();
 		meanRating = 0;
 	}

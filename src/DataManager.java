@@ -23,46 +23,69 @@ public class DataManager {
 	private Logger log;
 
 	public DataManager(String ratingsFile, String movieNamesFile) {
-		ratingReader = new RatingDATReader(ratingsFile);
-		movieNameReader = new MovieNamesDATReader(movieNamesFile);
-
-		ratings = ratingReader.read();
-		movieNames = movieNameReader.read();
-
-		usersAndRatings = new HashSet<>();
-		moviesAndRatings = new HashSet<>();
-		
 		log = Logger.getInstance();
 		log.setMessage("DataManager::DataManager instantiated.");
 		log.printToLog();
+		
+		ratingReader = new RatingDATReader(ratingsFile);
+		movieNameReader = new MovieNamesDATReader(movieNamesFile);
+
+		ratings = (List<RatingTuple>) ratingReader.read();
+		movieNames = movieNameReader.read();
+
+		usersAndRatings = new HashSet<>();
+		usersAndRatings = createUsersAndRatingsDataLayer();
+		moviesAndRatings = new HashSet<>();
+		moviesAndRatings = createMoviesAndRatingsDataLayer();
 	}
 
+	/**
+	 * @return the usersAndRatings
+	 */
 	public Set<User> getUsersAndRatings() {
+		return usersAndRatings;
+	}
+
+	/**
+	 * @return the moviesAndRatings
+	 */
+	public Set<Movie> getMoviesAndRatings() {
+		return moviesAndRatings;
+	}
+
+	private Set<User> createUsersAndRatingsDataLayer() {
 		Collections.sort(ratings, new RatingUserIDComparator());
 		Map<Movie, Double> movieRatings = new HashMap<>();
 		
 		User user = ratings.get(0).getUser();
 		int listLastIndex = ratings.size() - 1;
 		int iterationCounter = 0;
+		double ratingTotal = 0;
 		
 		for (RatingTuple rating : ratings) {
 
 			User currentUser = rating.getUser();
 			if (currentUser.compareTo(user) == 0 && iterationCounter < listLastIndex) {
-			
+				
+				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 			
 			} else if (currentUser.compareTo(user) == 0 && iterationCounter == listLastIndex) {
 				
+				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 				user.setMovieRatings(movieRatings);
+				user.setAvgRating(ratingTotal/movieRatings.size());
 				usersAndRatings.add(user);
 			
 			} else if (currentUser.compareTo(user) != 0) {
 				
 				user.setMovieRatings(movieRatings);
+				user.setAvgRating(ratingTotal/movieRatings.size());
 				usersAndRatings.add(user);
 				movieRatings = new HashMap<>();
+				ratingTotal = 0;
+				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 				user = currentUser;
 			
@@ -74,7 +97,7 @@ public class DataManager {
 		return usersAndRatings;
 	}
 
-	public Set<Movie> getMoviesAndRatings() {
+	private Set<Movie> createMoviesAndRatingsDataLayer() {
 		Collections.sort(ratings, new RatingMovieIDComparator());
 		Map<User, Double> userRatings = new HashMap<>();
 		
@@ -123,4 +146,6 @@ public class DataManager {
 		log.printToLog();
 		return moviesAndRatings;
 	}
+	
+	
 }
