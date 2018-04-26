@@ -40,16 +40,18 @@ public class Neighbor implements Comparable<Neighbor>{
 	public void setCoeff(double coeff) {
 		this.coeff = coeff;
 	}
-	
+	/**
+	 * Descending order compareTo method
+	 */
 	@Override
 	public int compareTo(Neighbor o) {
-		double thisCoeff = Math.round(this.coeff);
-		double otherCoeff = Math.round(o.getCoeff());
+		double thisCoeff = Math.round(this.coeff * 10000)/10000;
+		double otherCoeff = Math.round(o.getCoeff() * 10000)/10000;
 		
 		if (thisCoeff - otherCoeff < 0) {
-			return -1;
-		} else if (thisCoeff - otherCoeff > 0) {
 			return 1;
+		} else if (thisCoeff - otherCoeff > 0) {
+			return -1;
 		} else {
 			return 0;
 		}
