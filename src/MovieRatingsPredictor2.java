@@ -10,22 +10,26 @@ import java.util.Set;
  * @author sgb
  *
  */
-public class MovieRatingsPredictor {
-	private DataManager dataManager;
+public class MovieRatingsPredictor2 {
+	private DataManager2 dataManager2;
 	private Set<User> usersAndRatings;
-	private SimilarityEngine similarityEngine;
+	private Map<Integer, User> userIDToUserMap;
+	private Map<Integer, Movie> movieIDToMovieMap;
+	private SimilarityEngine2 similarityEngine2;
 	private Logger log;
 	
-	public MovieRatingsPredictor(String ratingsFileName, String moviesFileName) {
-		dataManager = new DataManager(ratingsFileName, moviesFileName);
-		usersAndRatings = dataManager.getUsersAndRatings();
-		similarityEngine = new SimilarityEngine();
+	public MovieRatingsPredictor2(String ratingsFileName, String moviesFileName) {
+		dataManager2 = new DataManager2(ratingsFileName, moviesFileName);
+		usersAndRatings = dataManager2.getUsersAndRatings();
+		userIDToUserMap = dataManager2.getUserIDToUserMap();
+		movieIDToMovieMap = dataManager2.getMovieIDToMovieMap();
+		similarityEngine2 = new SimilarityEngine2();
 		log = Logger.getInstance();
 		log.setMessage("MovieRatingsPredictor::MovieRatingsPredictor instantiated");
 		log.printToLog();
 	}
 	
-	public double getPrediction(User user, Movie movieOfInterest, int neighborhoodSize) {
+	public Double getPrediction(User user, Movie movieOfInterest, int neighborhoodSize) {
 		
 		Map<Movie, Double> usersMovieRatings = user.getMovieRatings();
 		for (Movie movie : usersMovieRatings.keySet()) {
@@ -37,7 +41,7 @@ public class MovieRatingsPredictor {
 		
 		double usersAvgRating = user.getAvgRating();
 		
-		List<Neighbor> neighbors = similarityEngine.getUserNeighborhood(user, movieOfInterest, dataManager.getUsersAndRatings(), neighborhoodSize);
+		List<Neighbor> neighbors = similarityEngine2.getUserNeighborhood(user, movieOfInterest, dataManager2.getUsersAndRatings(), neighborhoodSize);
 		
 		double numerator = 0;
 		double denominator = 0;
@@ -62,7 +66,13 @@ public class MovieRatingsPredictor {
 		}
 		log.setMessage("MovieRatingsPredictor::getPredictor() returned a prediction.");
 		log.printToLog();
-		return usersAvgRating + (numerator/denominator);
+		
+		if (numerator == 0 || denominator == 0 
+				|| numerator == Double.NaN || denominator == Double.NaN) {
+			return null;
+		} else {
+			return usersAvgRating + (numerator/denominator);
+		}
 	}
 	
 	
@@ -78,6 +88,20 @@ public class MovieRatingsPredictor {
 	 */
 	public Set<User> getUsersAndRatings() {
 		return usersAndRatings;
+	}
+
+	/**
+	 * @return the userIDToUserMap
+	 */
+	public Map<Integer, User> getUserIDToUserMap() {
+		return userIDToUserMap;
+	}
+
+	/**
+	 * @return the movieIDToMovieMap
+	 */
+	public Map<Integer, Movie> getMovieIDToMovieMap() {
+		return movieIDToMovieMap;
 	}
 
 }

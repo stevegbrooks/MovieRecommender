@@ -1,6 +1,5 @@
-import java.util.Collection;
+import java.util.List;
 
 public abstract class Reader<E> {
-	
-	public abstract Collection<E> read();
+	public abstract List<E> read();
 }

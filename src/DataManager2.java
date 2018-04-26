@@ -13,16 +13,18 @@ import java.util.Set;
  * @author sgb
  *
  */
-public class DataManager {
+public class DataManager2 {
 	private Reader<RatingTuple> ratingReader;
 	private MovieNamesDATMapper movieNameReader;
 	private List<RatingTuple> ratings;
 	private Map<Movie, String> movieNames;
 	private Set<User> usersAndRatings;
 	private Set<Movie> moviesAndRatings;
+	private Map<Integer, User> userIDToUserMap;
+	private Map<Integer, Movie> movieIDToMovieMap;
 	private Logger log;
 
-	public DataManager(String ratingsFile, String movieNamesFile) {
+	public DataManager2(String ratingsFile, String movieNamesFile) {
 		log = Logger.getInstance();
 		log.setMessage("DataManager::DataManager instantiated.");
 		log.printToLog();
@@ -34,9 +36,28 @@ public class DataManager {
 		movieNames = movieNameReader.read();
 
 		usersAndRatings = new HashSet<>();
+		userIDToUserMap = new HashMap<Integer, User>();
 		usersAndRatings = createUsersAndRatingsDataLayer();
+		
 		moviesAndRatings = new HashSet<>();
+		movieIDToMovieMap = new HashMap<Integer, Movie>();
 		moviesAndRatings = createMoviesAndRatingsDataLayer();
+		
+
+	}
+
+	/**
+	 * @return the userIDToUserMap
+	 */
+	public Map<Integer, User> getUserIDToUserMap() {
+		return userIDToUserMap;
+	}
+
+	/**
+	 * @return the movieIDToMovieMap
+	 */
+	public Map<Integer, Movie> getMovieIDToMovieMap() {
+		return movieIDToMovieMap;
 	}
 
 	/**
@@ -58,6 +79,7 @@ public class DataManager {
 		Map<Movie, Double> movieRatings = new HashMap<>();
 		
 		User user = ratings.get(0).getUser();
+		int userID = user.getUserID();
 		int listLastIndex = ratings.size() - 1;
 		int iterationCounter = 0;
 		double ratingTotal = 0;
@@ -65,6 +87,8 @@ public class DataManager {
 		for (RatingTuple rating : ratings) {
 
 			User currentUser = rating.getUser();
+			int currentUserID = currentUser.getUserID();
+			
 			if (currentUser.compareTo(user) == 0 && iterationCounter < listLastIndex) {
 				
 				ratingTotal += rating.getRating();
@@ -77,17 +101,23 @@ public class DataManager {
 				user.setMovieRatings(movieRatings);
 				user.setAvgRating(ratingTotal/movieRatings.size());
 				usersAndRatings.add(user);
+				
+				userIDToUserMap.put(userID, user);
 			
 			} else if (currentUser.compareTo(user) != 0) {
 				
 				user.setMovieRatings(movieRatings);
 				user.setAvgRating(ratingTotal/movieRatings.size());
 				usersAndRatings.add(user);
+				
+				userIDToUserMap.put(userID, user);
+				
 				movieRatings = new HashMap<>();
 				ratingTotal = 0;
 				ratingTotal += rating.getRating();
 				movieRatings.put(rating.getMovie(), rating.getRating());
 				user = currentUser;
+				userID = currentUserID;
 			
 			} 
 			iterationCounter++;
@@ -105,11 +135,13 @@ public class DataManager {
 		int iterationCounter = 0;
 		
 		Movie movie = ratings.get(0).getMovie();
+		int movieID = movie.getMovieID();
 		movie.setMovieName(movieNames.get(movie));
 
 		for (RatingTuple rating : ratings) {
 			
 			Movie currentMovie = rating.getMovie();
+			int currentMovieID = currentMovie.getMovieID();
 			currentMovie.setMovieName(movieNames.get(currentMovie));
 			
 			if (currentMovie.compareTo(movie) == 0 && iterationCounter < listLastIndex) {
@@ -121,23 +153,28 @@ public class DataManager {
 				userRatings.put(rating.getUser(), rating.getRating());
 				movie.setUserRatings(userRatings);
 				moviesAndRatings.add(movie);
+				movieIDToMovieMap.put(movieID, movie);
 				
 			} else if (currentMovie.compareTo(movie) != 0 && iterationCounter == listLastIndex) {
 				
 				movie.setUserRatings(userRatings);
 				moviesAndRatings.add(movie);
+				movieIDToMovieMap.put(movieID, movie);
 				userRatings = new HashMap<>();
 				userRatings.put(rating.getUser(), rating.getRating());
 				currentMovie.setUserRatings(userRatings);
 				moviesAndRatings.add(currentMovie);
+				movieIDToMovieMap.put(currentMovieID, currentMovie);
 			
 			} else if (currentMovie.compareTo(movie) != 0) {
 				
 				movie.setUserRatings(userRatings);
 				moviesAndRatings.add(movie);
+				movieIDToMovieMap.put(movieID, movie);
 				userRatings = new HashMap<>();
 				userRatings.put(rating.getUser(), rating.getRating());
 				movie = currentMovie;
+				movieID = currentMovieID;
 				
 			}
 			iterationCounter++;

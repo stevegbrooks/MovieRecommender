@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MovieNamesDATReader {
+public class MovieNamesDATMapper {
 	private String fileName;
 	private Logger log;
 	
-	public MovieNamesDATReader(String fileName) {
+	public MovieNamesDATMapper(String fileName) {
 		this.fileName = fileName;
 		log = Logger.getInstance();
-		log.setMessage("MovieNamesDATReader::MovieNamesDATReader instantiated.");
+		log.setMessage("MovieNamesDATMapper::MovieNamesDATMapper instantiated.");
 		log.printToLog();
 	}
 
@@ -28,7 +28,7 @@ public class MovieNamesDATReader {
 				movies.put(new Movie(movieID), movieName);
 			}
 			br.close();
-			log.setMessage("MovieNamesDATReader::Movie names file successfully read.");
+			log.setMessage("MovieNamesDATMapper::Movie names file successfully read.");
 			log.printToLog();
 			return movies;
 		} catch (IOException e) {
