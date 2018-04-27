@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.Set;
 public class MovieRatingsPredictor2 {
 	private DataManager2 dataManager2;
 	private Set<User> usersAndRatings;
+	private Set<Movie> moviesAndRatings;
 	private Map<Integer, User> userIDToUserMap;
 	private Map<Integer, Movie> movieIDToMovieMap;
 	private SimilarityEngine2 similarityEngine2;
@@ -21,6 +24,7 @@ public class MovieRatingsPredictor2 {
 	public MovieRatingsPredictor2(String ratingsFileName, String moviesFileName) {
 		dataManager2 = new DataManager2(ratingsFileName, moviesFileName);
 		usersAndRatings = dataManager2.getUsersAndRatings();
+		moviesAndRatings = dataManager2.getMoviesAndRatings();
 		userIDToUserMap = dataManager2.getUserIDToUserMap();
 		movieIDToMovieMap = dataManager2.getMovieIDToMovieMap();
 		similarityEngine2 = new SimilarityEngine2();
@@ -77,10 +81,29 @@ public class MovieRatingsPredictor2 {
 	
 	
 	public List<Recommendation> getMovieRecommendations(User user, int threshold) {
-		
+		//I'll first need to get the list of movies that a given user has NOT seen
+		//Then, for each movie, run the getPrediction() method, and store that in a list
+		//of recommendations.  Then sort by predicted rating, descending, and return the
+		//n-highest (as defined by threshold).
+		List<Recommendation> recommendations = new ArrayList<>();
+		Map<Movie, Double> moviesUserHasSeen = user.getMovieRatings();
+		for (Movie movie : moviesAndRatings) {
+			for (Movie movieSeen : moviesUserHasSeen.keySet()) {
+				if (movie.compareTo(movieSeen) != 0) {
+					double predictedRating = getPrediction(user, movie, 2);
+					recommendations.add(new Recommendation(movie, predictedRating));
+				}
+			}
+		}
 		log.setMessage("MovieRatingsPredictor::getMovieRecommendations returned a List of Recommendations.");
 		log.printToLog();
-		return null;
+		Collections.sort(recommendations);
+		if (recommendations.size() > threshold) {
+			List<Recommendation> recommendationsSlice = recommendations.subList(0, threshold);
+			return recommendationsSlice;
+		} else {
+			return recommendations;
+		}
 	}
 
 	/**

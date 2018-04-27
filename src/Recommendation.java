@@ -43,9 +43,9 @@ public class Recommendation implements Comparable<Recommendation>{
 	@Override
 	public int compareTo(Recommendation o) {
 		if (this.prediction < o.getPrediction()) {
-			return - 1;
-		} else if (this.prediction > o.getPrediction()) {
 			return 1;
+		} else if (this.prediction > o.getPrediction()) {
+			return - 1;
 		} else {
 			return 0;
 		}
