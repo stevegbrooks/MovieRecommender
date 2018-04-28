@@ -18,10 +18,12 @@ public class UserInterface {
 		log = Logger.getInstance();
 		log.setMessage("UserInterface::UserInterface instantiated.");
 		log.printToLog();
+		System.out.println("===========================================================");
 	}
 	
 	public void menu() {
 		System.out.println("Welcome to the Movie Ratings Predictor.");
+		System.out.println("===========================================================");
 		in = new Scanner(System.in);
 		boolean quit = false;
 		while (!quit) {
@@ -60,25 +62,40 @@ public class UserInterface {
 	
 	private void handleGetPrediction() {
 		Double prediction = null;
+		Integer neighborhoodSize = null;
+		User userOfInterest = null;
+		Movie movieOfInterest = null;
 		while (true) {
 			System.out.println("Enter User ID#:");
 			String userInput = in.nextLine();
-			System.out.println("Enter the name of a movie:");
+			System.out.println("Enter Movie ID#:");
 			String movieInput = in.nextLine();
 			System.out.println("Enter neighborhood size for prediction algorithm:");
 			String size = in.nextLine();
 			
-			int neighborhoodSize = Integer.parseInt(size);
-			User userOfInterest = getUserObjectFromString(userInput);
-			Movie movieOfInterest = getMovieObjectFromString(movieInput);
+			try {
+				neighborhoodSize = Integer.parseInt(size);
+			} catch (NumberFormatException nfe) {
+				System.out.println("ERROR: Please enter an integer for 'neighborhood size'!");
+				System.out.println("===========================================================");
+				break;
+			}
 			
-			if (userOfInterest == null || movieOfInterest == null) {
-				System.out.println("ERROR: Invalid arguments to prediction algorithm. Returning to menu.");
+			userOfInterest = getUserObjectFromString(userInput);
+			movieOfInterest = getMovieObjectFromString(movieInput);
+			
+			if (userOfInterest == null) {
+				System.out.println("ERROR: User was not found. Returning to menu.");
+				System.out.println("===========================================================");
+				break;
+			} else if (movieOfInterest == null) {
+				System.out.println("ERROR: Movie was not found. Returning to menu.");
 				System.out.println("===========================================================");
 				break;
 			} else {
 				try {
-					prediction = mrp2.getPrediction(userOfInterest, movieOfInterest, neighborhoodSize);
+					boolean isInternalCall = false;
+					prediction = mrp2.getPrediction(userOfInterest, movieOfInterest, neighborhoodSize, isInternalCall);
 				} catch (IllegalArgumentException iae) {
 					System.out.println(iae.getMessage());
 					System.out.println("===========================================================");
@@ -101,23 +118,31 @@ public class UserInterface {
 	
 	private void handleGetMovieRecommendations() {
 		List<Recommendation> recommendations = new ArrayList<>();
-		int threshold = 0;
+		Integer threshold = null;
+		User userOfInterest = null;
 		while (true) {
 			System.out.println("Enter User ID#:");
 			String userInput = in.nextLine();
 			System.out.println("Enter threshold:");
 			String thresholdString = in.nextLine();
 			
-			threshold = Integer.parseInt(thresholdString);
-			User userOfInterest = getUserObjectFromString(userInput);
+			try {
+				threshold = Integer.parseInt(thresholdString);
+			} catch (NumberFormatException nfe) {
+				System.out.println("ERROR: Please enter an integer for 'threshold'!");
+				System.out.println("===========================================================");
+				break;
+			}
+			
+			userOfInterest = getUserObjectFromString(userInput);
 			
 			if (userOfInterest == null) {
-				System.out.println("ERROR: Invalid arguments to prediction algorithm. Returning to menu.");
+				System.out.println("ERROR: Can't find that user! Returning to menu.");
 				System.out.println("===========================================================");
 				break;
 			} else {
 				try {
-					recommendations = mrp2.getMovieRecommendations(userOfInterest, 10);
+					recommendations = mrp2.getMovieRecommendations(userOfInterest, threshold);
 				} catch (IllegalArgumentException iae) {
 					System.out.println(iae.getMessage());
 					System.out.println("===========================================================");
@@ -132,8 +157,9 @@ public class UserInterface {
 				}
 			}
 		}
-		if (recommendations != null) {
-			System.out.println("Here are the top " + threshold + " movies that we recommend:");
+		if (recommendations != null && userOfInterest != null && threshold != null) {
+			System.out.println("Here are the movies that we recommend:");
+			System.out.println("===========================================================");
 			for (Recommendation recommendation : recommendations) {
 				System.out.println(recommendation.toString());
 			}
@@ -143,14 +169,24 @@ public class UserInterface {
 	
 	private User getUserObjectFromString(String userInput) {
 		User output = null;
-		int userID = Integer.parseInt(userInput);
+		Integer userID = null;
+		try {
+			userID = Integer.parseInt(userInput);
+		} catch (NumberFormatException nfe) {
+			System.out.println("Please enter an integer for User ID#");
+		}
 		output = userIDToUserMap.get(userID);
 		return output;
 	}
 	
 	private Movie getMovieObjectFromString(String movieInput) {
 		Movie output = null;
-		int movieID = Integer.parseInt(movieInput);
+		Integer movieID = null;
+		try {
+			movieID = Integer.parseInt(movieInput);
+		} catch (NumberFormatException nfe) {
+			System.out.println("Please enter an integer for Movie ID#");
+		}
 		output = movieIDToMovieMap.get(movieID);
 		return output;
 	}

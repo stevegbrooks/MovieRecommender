@@ -50,4 +50,12 @@ public class Recommendation implements Comparable<Recommendation>{
 			return 0;
 		}
 	}
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Movie ID: " + this.movie.getMovieID());
+		sb.append("; Movie Name: " + this.movie.toString());
+		sb.append("; Predicted Rating: " + (double) Math.round(prediction * 100)/100);
+		return sb.toString();
+	}
 }

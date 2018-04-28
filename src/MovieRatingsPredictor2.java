@@ -33,19 +33,22 @@ public class MovieRatingsPredictor2 {
 		log.printToLog();
 	}
 	
-	public Double getPrediction(User user, Movie movieOfInterest, int neighborhoodSize) {
+	public Double getPrediction(User user, Movie movieOfInterest, int neighborhoodSize, boolean isInternalCall) {
 		
-		Map<Movie, Double> usersMovieRatings = user.getMovieRatings();
-		for (Movie movie : usersMovieRatings.keySet()) {
-			if (movie.compareTo(movieOfInterest) == 0) {
-				throw new IllegalArgumentException("Error: User has already rated this movie, "
-						+ "and gave it a rating of " + usersMovieRatings.get(movie) + ".");
+		if (!isInternalCall) {
+			Map<Movie, Double> usersMovieRatings = user.getMovieRatings();
+			for (Movie movie : usersMovieRatings.keySet()) {
+				if (movie.compareTo(movieOfInterest) == 0) {
+					throw new IllegalArgumentException("Error: User has already rated this movie, "
+							+ "and gave it a rating of " + usersMovieRatings.get(movie) + ".");
+				}
 			}
 		}
 		
 		double usersAvgRating = user.getAvgRating();
 		
-		List<Neighbor> neighbors = similarityEngine2.getUserNeighborhood(user, movieOfInterest, dataManager2.getUsersAndRatings(), neighborhoodSize);
+		List<Neighbor> neighbors = similarityEngine2.getUserNeighborhood(user, movieOfInterest, 
+				dataManager2.getUsersAndRatings(), neighborhoodSize);
 		
 		double numerator = 0;
 		double denominator = 0;
@@ -71,11 +74,19 @@ public class MovieRatingsPredictor2 {
 		log.setMessage("MovieRatingsPredictor::getPredictor() returned a prediction.");
 		log.printToLog();
 		
-		if (numerator == 0 || denominator == 0 
-				|| numerator == Double.NaN || denominator == Double.NaN) {
+		if (denominator == 0 || numerator == Double.NaN || denominator == Double.NaN) {
 			return null;
 		} else {
-			return usersAvgRating + (numerator/denominator);
+			double prediction = usersAvgRating + (numerator/denominator);
+			
+			if (prediction >= 5) {
+				return 5.0;
+			} else if (prediction <= 0) {
+				return 0.0;
+			} else {
+				return prediction;
+			}
+			
 		}
 	}
 	
@@ -88,22 +99,21 @@ public class MovieRatingsPredictor2 {
 		List<Recommendation> recommendations = new ArrayList<>();
 		Map<Movie, Double> moviesUserHasSeen = user.getMovieRatings();
 		for (Movie movie : moviesAndRatings) {
-			for (Movie movieSeen : moviesUserHasSeen.keySet()) {
-				if (movie.compareTo(movieSeen) != 0) {
-					double predictedRating = getPrediction(user, movie, 2);
+			if (!moviesUserHasSeen.containsKey(movie)) {
+				boolean isInternalCall = true;
+				Double predictedRating = getPrediction(user, movie, 2, isInternalCall);
+				if (predictedRating != null) {
 					recommendations.add(new Recommendation(movie, predictedRating));
 				}
+			}
+			if (recommendations.size() >= threshold) {
+				break;
 			}
 		}
 		log.setMessage("MovieRatingsPredictor::getMovieRecommendations returned a List of Recommendations.");
 		log.printToLog();
 		Collections.sort(recommendations);
-		if (recommendations.size() > threshold) {
-			List<Recommendation> recommendationsSlice = recommendations.subList(0, threshold);
-			return recommendationsSlice;
-		} else {
-			return recommendations;
-		}
+		return recommendations;
 	}
 
 	/**

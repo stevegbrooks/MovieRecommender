@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-
 /**
  * This class will be used by MovieRatingsPredictor
  * and assist in the task of making ratings predictions.
@@ -14,10 +12,8 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
  */
 public class SimilarityEngine2 {
 	private Logger log;
-	private PearsonsCorrelation pearsonsCorrelation;
 	
 	public SimilarityEngine2() {
-		pearsonsCorrelation = new PearsonsCorrelation();
 		log = Logger.getInstance();
 		log.setMessage("UserSimilarityEngine::UserSimilarityEngine instantiated.");
 		log.printToLog();
@@ -60,9 +56,6 @@ public class SimilarityEngine2 {
 		Map<Movie, Double> user1Ratings = user1.getMovieRatings();
 		Map<Movie, Double> user2Ratings = user2.getMovieRatings();
 		
-		ArrayList<Double> user1RatingsData = new ArrayList<>();
-		ArrayList<Double> user2RatingsData = new ArrayList<>();
-		
 		double sumU1 = 0;
 		double sumU2 = 0;
 		double sumU1U2 = 0;
@@ -74,9 +67,6 @@ public class SimilarityEngine2 {
 			for (Movie movie2 : user2Ratings.keySet()) {
 				if (movie1.equals(movie2)) {
 					moviesInCommon++;
-					user1RatingsData.add(user1Ratings.get(movie1));
-					user2RatingsData.add(user2Ratings.get(movie2));
-					
 					sumU1 += user1Ratings.get(movie1);
 					sumU2 += user2Ratings.get(movie2);
 					sumU1U2 += user1Ratings.get(movie1) * user2Ratings.get(movie2);
@@ -86,24 +76,19 @@ public class SimilarityEngine2 {
 				}
 			}
 		}
-		user1RatingsData.trimToSize();
-		user2RatingsData.trimToSize();
-		double[] user1RatingsDataArray = new double[user1RatingsData.size()];
-		for (int i = 0; i < user1RatingsData.size(); i++) {
-			user1RatingsDataArray[i] = user1RatingsData.get(i);
-		}
-		double[] user2RatingsDataArray = new double[user2RatingsData.size()];
-		for (int i = 0; i < user2RatingsData.size(); i++) {
-			user2RatingsDataArray[i] = user2RatingsData.get(i);
-		}
-		
-		//double alternativeAnswer = pearsonsCorrelation.correlation(user1RatingsDataArray, user2RatingsDataArray);
 		
 		double numerator = sumU1U2/moviesInCommon - sumU1 * sumU2 / moviesInCommon / moviesInCommon;
 		double denominatorPart1 = Math.sqrt(sumU1U1 / moviesInCommon - sumU1 * sumU1 / moviesInCommon / moviesInCommon);
 		double denominatorPart2 = Math.sqrt(sumU2U2 / moviesInCommon - sumU2 * sumU2 / moviesInCommon / moviesInCommon);
 			
-		return numerator/denominatorPart1/denominatorPart2;
-		//return alternativeAnswer;
+		double prediction =  numerator/denominatorPart1/denominatorPart2;
+		
+		if (prediction >= 1) {
+			return 1.0;
+		} else if (prediction <= -1) {
+			return -1.0;
+		} else {
+			return prediction;
+		}
 	}
 }
