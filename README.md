@@ -2,7 +2,7 @@ HW5 README
 
 # Implemented Design Patterns
 
-##Three-Tier Architecture
+## Three-Tier Architecture
 
 This project uses a Three-Tier Architecture. The Data tier consists of the RatingTupleReaders, the RatingTupleReaderFactory, the MovieRatingsDataStore, the MovieNameMappers, and the ReaderUtility classes, as well as the POJOs that those classes use (RatingTuple, User, and Movie).
 
