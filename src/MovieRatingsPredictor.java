@@ -35,7 +35,15 @@ public class MovieRatingsPredictor {
 		log.setMessage("MovieRatingsPredictor::MovieRatingsPredictor instantiated");
 		log.printToLog();
 	}
-	
+	/**
+	 * This method is used both internally by the getMovieRecommendation() method as well as 
+	 * externally by the UserInterface. It produces a Double based on the algorithms in the SimilarityEngine class.
+	 * @param user the user of interest
+	 * @param movieOfInterest a movie that the user has not seen 
+	 * @param neighborhoodSize the number of neighbors to base the prediction on
+	 * @param isInternalCall whether or not the method is being called internally
+	 * @return a Double. Returns null if the prediction is NaN.
+	 */
 	public Double getPrediction(User user, Movie movieOfInterest, int neighborhoodSize, boolean isInternalCall) {
 		
 		if (!isInternalCall) {
@@ -92,12 +100,18 @@ public class MovieRatingsPredictor {
 			
 		}
 	}
-	
+	/**
+	 * This method picks out movies that the user has not seen and runs the getPrediction() method. It 
+	 * stores the result in a List of type Recommendation.
+	 * It stops doing this when the number of recommendations is equal to the threshold argument.
+	 * It then sorts (descending in terms of predicted rating) the list of recommendations.
+	 * 
+	 * @param user the user to get recommendations for
+	 * @param threshold the number of recommendations to return
+	 * @return a List of type Recommendation, sorted descending in terms of predicted rating
+	 */
 	public List<Recommendation> getMovieRecommendations(User user, int threshold) {
-		//I'll first need to get the list of movies that a given user has NOT seen
-		//Then, for each movie, run the getPrediction() method, and store that in a list
-		//of recommendations.  Then sort by predicted rating, descending, and return the
-		//n-highest (as defined by threshold).
+		
 		List<Recommendation> recommendations = new ArrayList<>();
 		Map<Movie, Double> moviesUserHasSeen = user.getMovieRatings();
 		for (Movie movie : moviesAndRatings) {

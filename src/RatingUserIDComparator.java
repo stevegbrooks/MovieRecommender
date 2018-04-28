@@ -1,5 +1,10 @@
 import java.util.Comparator;
-
+/**
+ * This comparator sorts a List of RatingTuples by User, which means
+ * that the List gets sorted ascending by user ID#.
+ * @author sgb
+ *
+ */
 public class RatingUserIDComparator implements Comparator<RatingTuple> {
 
 	@Override

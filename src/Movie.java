@@ -2,8 +2,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * POJO to represent a Movie
  * @author sgb
- *
  */
 public class Movie implements Comparable<Movie> {
 	private int movieID;
@@ -51,8 +51,8 @@ public class Movie implements Comparable<Movie> {
 		this.movieName = movieName;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * Hashcode function for adding to Set<Movie>
 	 */
 	@Override
 	public int hashCode() {
@@ -62,8 +62,9 @@ public class Movie implements Comparable<Movie> {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * Custom equals function for determining whether one Movie
+	 * object is the same as another - based on movieID#.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -78,7 +79,10 @@ public class Movie implements Comparable<Movie> {
 			return false;
 		return true;
 	}
-
+	
+	/**
+	 * Sorts ascending by movieID#
+	 */
 	@Override
 	public int compareTo(Movie otherMovie) {
 		return this.movieID - otherMovie.movieID;

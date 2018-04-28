@@ -4,7 +4,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * This concrete RatingTupleReader reads DAT files.
+ * @author sgb
+ *
+ */
 public class RatingTupleDATReader extends RatingTupleReader {
 	private String fileName;
 	private Logger log;

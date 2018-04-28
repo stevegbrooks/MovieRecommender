@@ -4,7 +4,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * This concrete MovieNameMapper reads DAT files.
+ * @author sgb
+ *
+ */
 public class MovieNameDATMapper extends MovieNameMapper {
 	private String fileName;
 	private Logger log;

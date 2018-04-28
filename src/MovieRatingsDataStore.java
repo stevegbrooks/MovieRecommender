@@ -6,7 +6,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class will create and store the necessary data layers.
+ * This class creates and stores the necessary data layers for this program.
+ * 
+ * This is the top of the Data tier, and is the source of information for the Controller tier. 
+ * It builds the necessary dependencies based on the file paths given to it 
+ * by the Controller tier.
+ * 
+ * This class stores the Collections and Maps of data that the Controller needs to do its job.
+ * 
  * @author sgb
  *
  */
@@ -26,7 +33,13 @@ public class MovieRatingsDataStore {
 	private Map<Integer, Movie> movieIDToMovieMap;
 	//logger singleton
 	private Logger log;
-
+	
+	/**
+	 * This is a busy constructor. Basically a client just needs to instantiate
+	 * this object and then call the getter methods to retrieve the data.
+	 * @param ratingsFile
+	 * @param movieNamesFile
+	 */
 	public MovieRatingsDataStore(String ratingsFile, String movieNamesFile) {
 		log = Logger.getInstance();
 		log.setMessage("DataManager::DataManager instantiated.");
@@ -50,7 +63,11 @@ public class MovieRatingsDataStore {
 		movieIDToMovieMap = new HashMap<Integer, Movie>();
 		moviesAndRatings = createMoviesAndRatingsDataLayer();
 	}
-
+	/**
+	 * Creates a Set of type User, and sets all User objects with a 
+	 * HashMap<Movie, Double> for all the movies ratings that the User has completed.
+	 * @return Set<User>
+	 */
 	private Set<User> createUsersAndRatingsDataLayer() {
 		Collections.sort(ratings, new RatingUserIDComparator());
 		Map<Movie, Double> movieRatings = new HashMap<>();
@@ -103,7 +120,13 @@ public class MovieRatingsDataStore {
 		log.printToLog();
 		return usersAndRatings;
 	}
-
+	/**
+	 * This method creates a Set of type Movie, and also sets each Movie objects
+	 * with a HashMap<User, Double> of all the ratings its received and from which users.
+	 * 
+	 * It also binds movie names to each Movie object. Dependency on the MovieNameMapper.
+	 * @return Set<Movie>
+	 */
 	private Set<Movie> createMoviesAndRatingsDataLayer() {
 		Collections.sort(ratings, new RatingMovieIDComparator());
 		Map<User, Double> userRatings = new HashMap<>();

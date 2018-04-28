@@ -39,7 +39,9 @@ public class Recommendation implements Comparable<Recommendation>{
 	public void setPrediction(double prediction) {
 		this.prediction = prediction;
 	}
-
+	/**
+	 * Sorts in descending order based on predicted rating
+	 */
 	@Override
 	public int compareTo(Recommendation o) {
 		if (this.prediction < o.getPrediction()) {
@@ -50,6 +52,7 @@ public class Recommendation implements Comparable<Recommendation>{
 			return 0;
 		}
 	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

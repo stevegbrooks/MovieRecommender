@@ -1,4 +1,12 @@
-
+/**
+ * This concrete factory class has the responsibility of 
+ * determining which RatingTupleReader class to create, as well as creating it. 
+ * 
+ * It also throws an exception if the file type is not supported.
+ * 
+ * @author sgb
+ *
+ */
 public class RatingTupleReaderFactory {
 	private RatingTupleReader reader;
 	private ReaderUtility utils;

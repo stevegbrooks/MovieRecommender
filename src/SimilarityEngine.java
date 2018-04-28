@@ -12,13 +12,25 @@ import java.util.Set;
  */
 public class SimilarityEngine {
 	private Logger log;
-	
+	/**
+	 * Constructor for SimilarityEngine
+	 */
 	public SimilarityEngine() {
 		log = Logger.getInstance();
 		log.setMessage("UserSimilarityEngine::UserSimilarityEngine instantiated.");
 		log.printToLog();
 	}
-	
+	/**
+	 * This method uses the getPearsonCorrelation method, and creates a List<Neighbor> based
+	 * on the k-nearest neighbors algorithm.
+	 * 
+	 * @param userOfInterest the user to find neighbors for
+	 * @param movieOfInterest the movie to find neighbors based on (a movie that the user of interest
+	 * has not seen/rated, but that the users neighbors have seen/rated)
+	 * @param otherUsers a Set<User> of all the other users in the data set - potential neighbors
+	 * @param neighborhoodSize how many neighbors to return
+	 * @return a sorted List<Neighbor> in descending order in terms of pearson correlation coefficient
+	 */
 	public List<Neighbor> getUserNeighborhood(User userOfInterest, Movie movieOfInterest, 
 			Set<User> otherUsers, int neighborhoodSize) {
 		
@@ -51,7 +63,13 @@ public class SimilarityEngine {
 		
 		return neighborhood;
 	}
-		
+	/**
+	 * This method is used by getUserNeighborhood in order to calculate similarity between
+	 * two users. The returned double will be between -1 and 1.
+	 * @param user1
+	 * @param user2
+	 * @return a Double. Returns null if the computation returns a "NaN"
+	 */
 	private Double getPearsonCorrelation(User user1, User user2) {
 		Map<Movie, Double> user1Ratings = user1.getMovieRatings();
 		Map<Movie, Double> user2Ratings = user2.getMovieRatings();

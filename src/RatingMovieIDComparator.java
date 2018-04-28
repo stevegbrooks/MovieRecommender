@@ -1,5 +1,9 @@
 import java.util.Comparator;
-
+/**
+ * This comparator sorts RatingTuples based on their Movie ID# in ascending order.
+ * @author sgb
+ *
+ */
 public class RatingMovieIDComparator implements Comparator<RatingTuple>{
 
 	@Override

@@ -2,14 +2,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
+/**
+ * The UI is the Presentation tier of the program. 
+ * Handles user requests for predictions/recommendations, as well as handles bad input.
+ * @author sgb
+ *
+ */
 public class UserInterface {
 	private MovieRatingsPredictor mrp2;
 	private Scanner in;
 	private Map<Integer, User> userIDToUserMap;
 	private Map<Integer, Movie> movieIDToMovieMap;
 	private Logger log;
-	
+	/**
+	 * UI Constructor - takes in file names 
+	 * @param ratingsFileName
+	 * @param movieNamesFileName
+	 */
 	public UserInterface(String ratingsFileName, String movieNamesFileName) {
 		System.out.println("Please be patient - reading files into memory...");
 		mrp2 = new MovieRatingsPredictor(ratingsFileName, movieNamesFileName);
@@ -20,7 +29,9 @@ public class UserInterface {
 		log.printToLog();
 		System.out.println("===========================================================");
 	}
-	
+	/**
+	 * Presents menu to user, and handles bad menu input.
+	 */
 	public void menu() {
 		System.out.println("Welcome to the Movie Ratings Predictor.");
 		System.out.println("===========================================================");
@@ -54,12 +65,18 @@ public class UserInterface {
 		}
 		in.close();
 	}
-	
+	/**
+	 * Gets the menu choice from the user.
+	 * @return int
+	 */
 	private int getMenuChoice() {
 		String input = in.nextLine();
 		return Integer.parseInt(input);
 	}
-	
+	/**
+	 * Handles a request from a user to get a movie rating prediction
+	 * given a User ID# and Movie ID#. Cannot handle movie names.
+	 */
 	private void handleGetPrediction() {
 		Double prediction = null;
 		Integer neighborhoodSize = null;
@@ -115,7 +132,10 @@ public class UserInterface {
 			System.out.println("===========================================================");
 		}
 	}
-	
+	/**
+	 * Handles user request for a list of movie recommendations of size threshold
+	 * for a given User ID#.
+	 */
 	private void handleGetMovieRecommendations() {
 		List<Recommendation> recommendations = new ArrayList<>();
 		Integer threshold = null;
@@ -123,13 +143,13 @@ public class UserInterface {
 		while (true) {
 			System.out.println("Enter User ID#:");
 			String userInput = in.nextLine();
-			System.out.println("Enter threshold:");
+			System.out.println("How many movie recommendations do you want?");
 			String thresholdString = in.nextLine();
 			
 			try {
 				threshold = Integer.parseInt(thresholdString);
 			} catch (NumberFormatException nfe) {
-				System.out.println("ERROR: Please enter an integer for 'threshold'!");
+				System.out.println("ERROR: Please enter an integer for number of movie recommendations.");
 				System.out.println("===========================================================");
 				break;
 			}
@@ -166,7 +186,11 @@ public class UserInterface {
 			System.out.println("===========================================================");
 		}
 	}
-	
+	/**
+	 * Returns an existing User object, if there is one, based on the user input.
+	 * @param userInput String input from user
+	 * @return an existing User object
+	 */
 	private User getUserObjectFromString(String userInput) {
 		User output = null;
 		Integer userID = null;
@@ -178,7 +202,11 @@ public class UserInterface {
 		output = userIDToUserMap.get(userID);
 		return output;
 	}
-	
+	/**
+	 * Returns an existing Movie object, if there is one, based on the user input.
+	 * @param movieInput String input from user
+	 * @return an existing Movie objects
+	 */
 	private Movie getMovieObjectFromString(String movieInput) {
 		Movie output = null;
 		Integer movieID = null;

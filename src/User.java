@@ -56,8 +56,8 @@ public class User implements Comparable<User> {
 		return this.userID == user.getUserID();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * Hashcode function for adding to Set<User>
 	 */
 	@Override
 	public int hashCode() {
@@ -67,8 +67,9 @@ public class User implements Comparable<User> {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * Custom equals function for determining whether one User
+	 * object is the same as another - based on userID#.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -84,6 +85,9 @@ public class User implements Comparable<User> {
 		return true;
 	}
 
+	/**
+	 * Sorts ascending by userID#
+	 */
 	@Override
 	public int compareTo(User otherUser) {
 		return this.userID - otherUser.userID;
