@@ -31,6 +31,7 @@ public class MovieRatingsDataStore {
 		log = Logger.getInstance();
 		log.setMessage("DataManager::DataManager instantiated.");
 		log.printToLog();
+		
 		//for the ratings file
 		ratingTupleReaderFactory = new RatingTupleReaderFactory();
 		ratingTupleReader = ratingTupleReaderFactory.createReader(ratingsFile);
@@ -40,6 +41,7 @@ public class MovieRatingsDataStore {
 		//get the data
 		ratings = ratingTupleReader.read();
 		movieNames = movieNameMapper.map();
+		
 		//create data layers
 		usersAndRatings = new HashSet<>();
 		userIDToUserMap = new HashMap<Integer, User>();

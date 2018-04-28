@@ -13,6 +13,8 @@ public class MovieNameMapperFactory {
 		//build the correct reader
 		if (fileType.equalsIgnoreCase(".dat")) {
 			mapper = new MovieNameDATMapper(movieNameFile);
+		} else {
+			throw new IllegalArgumentException("Sorry, but only '.dat' files are currently supported.");
 		}
 		return mapper;
 	}

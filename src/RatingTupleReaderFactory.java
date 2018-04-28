@@ -13,6 +13,8 @@ public class RatingTupleReaderFactory {
 		//build the correct reader
 		if (fileType.equalsIgnoreCase(".dat")) {
 			reader = new RatingTupleDATReader(ratingsFileName);
+		} else {
+			throw new IllegalArgumentException("Sorry, but only '.dat' files are currently supported.");
 		}
 		return reader;
 	}
