@@ -13,6 +13,7 @@ import java.time.Instant;
  */
 public class Logger {
 	public static Logger instance;
+	@SuppressWarnings("unused")
 	private FileWriter fileWriter;
 	private static String fileName;
 	private File log;

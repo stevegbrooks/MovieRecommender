@@ -9,13 +9,11 @@ public class Movie implements Comparable<Movie> {
 	private int movieID;
 	private String movieName;
 	private Map<User, Double> userRatings;
-	private double meanRating;
 	
 	public Movie(int movieID) {
 		this.movieID = movieID;
 		this.movieName = null;
 		userRatings = new HashMap<>();
-		meanRating = 0;
 	}
 	
 	/**
@@ -30,20 +28,6 @@ public class Movie implements Comparable<Movie> {
 	 */
 	public void setUserRatings(Map<User, Double> userRatings) {
 		this.userRatings = userRatings;
-	}
-
-	/**
-	 * @return the meanRating
-	 */
-	public double getMeanRating() {
-		return meanRating;
-	}
-
-	/**
-	 * @param meanRating the meanRating to set
-	 */
-	public void setMeanRating(double meanRating) {
-		this.meanRating = meanRating;
 	}
 
 	/**

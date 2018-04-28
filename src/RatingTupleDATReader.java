@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RatingDATReader extends Reader<RatingTuple> {
+public class RatingTupleDATReader extends RatingTupleReader {
 	private String fileName;
 	private Logger log;
 	
-	public RatingDATReader(String fileName) {
+	public RatingTupleDATReader(String fileName) {
 		this.fileName = fileName;
 		log = Logger.getInstance();
 		log.setMessage("RatingDATReader::RatingDATReader instantiated.");

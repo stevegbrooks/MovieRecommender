@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class UserInterface {
-	private MovieRatingsPredictor2 mrp2;
+	private MovieRatingsPredictor mrp2;
 	private Scanner in;
 	private Map<Integer, User> userIDToUserMap;
 	private Map<Integer, Movie> movieIDToMovieMap;
@@ -12,7 +12,7 @@ public class UserInterface {
 	
 	public UserInterface(String ratingsFileName, String movieNamesFileName) {
 		System.out.println("Please be patient - reading files into memory...");
-		mrp2 = new MovieRatingsPredictor2(ratingsFileName, movieNamesFileName);
+		mrp2 = new MovieRatingsPredictor(ratingsFileName, movieNamesFileName);
 		userIDToUserMap = mrp2.getUserIDToUserMap();
 		movieIDToMovieMap = mrp2.getMovieIDToMovieMap();
 		log = Logger.getInstance();

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,33 +13,45 @@ import java.util.Set;
  *
  */
 public class MovieRatingsPredictor {
-	private DataManager dataManager;
+	private MovieRatingsDataStore dataStore;
 	private Set<User> usersAndRatings;
+	private Set<Movie> moviesAndRatings;
+	private Map<Integer, User> userIDToUserMap;
+	private Map<Integer, Movie> movieIDToMovieMap;
 	private SimilarityEngine similarityEngine;
 	private Logger log;
 	
 	public MovieRatingsPredictor(String ratingsFileName, String moviesFileName) {
-		dataManager = new DataManager(ratingsFileName, moviesFileName);
-		usersAndRatings = dataManager.getUsersAndRatings();
+		dataStore = new MovieRatingsDataStore(ratingsFileName, moviesFileName);
+		
+		usersAndRatings = dataStore.getUsersAndRatings();
+		moviesAndRatings = dataStore.getMoviesAndRatings();
+		userIDToUserMap = dataStore.getUserIDToUserMap();
+		movieIDToMovieMap = dataStore.getMovieIDToMovieMap();
+		
 		similarityEngine = new SimilarityEngine();
+		
 		log = Logger.getInstance();
 		log.setMessage("MovieRatingsPredictor::MovieRatingsPredictor instantiated");
 		log.printToLog();
 	}
 	
-	public double getPrediction(User user, Movie movieOfInterest, int neighborhoodSize) {
+	public Double getPrediction(User user, Movie movieOfInterest, int neighborhoodSize, boolean isInternalCall) {
 		
-		Map<Movie, Double> usersMovieRatings = user.getMovieRatings();
-		for (Movie movie : usersMovieRatings.keySet()) {
-			if (movie.compareTo(movieOfInterest) == 0) {
-				throw new IllegalArgumentException("Error: User has already rated this movie, "
-						+ "and gave it a rating of " + usersMovieRatings.get(movie) + ".");
+		if (!isInternalCall) {
+			Map<Movie, Double> usersMovieRatings = user.getMovieRatings();
+			for (Movie movie : usersMovieRatings.keySet()) {
+				if (movie.compareTo(movieOfInterest) == 0) {
+					throw new IllegalArgumentException("Error: User has already rated this movie, "
+							+ "and gave it a rating of " + usersMovieRatings.get(movie) + ".");
+				}
 			}
 		}
 		
 		double usersAvgRating = user.getAvgRating();
 		
-		List<Neighbor> neighbors = similarityEngine.getUserNeighborhood(user, movieOfInterest, dataManager.getUsersAndRatings(), neighborhoodSize);
+		List<Neighbor> neighbors = similarityEngine.getUserNeighborhood(user, movieOfInterest, 
+				dataStore.getUsersAndRatings(), neighborhoodSize);
 		
 		double numerator = 0;
 		double denominator = 0;
@@ -62,15 +76,46 @@ public class MovieRatingsPredictor {
 		}
 		log.setMessage("MovieRatingsPredictor::getPredictor() returned a prediction.");
 		log.printToLog();
-		return usersAvgRating + (numerator/denominator);
+		
+		if (denominator == 0 || Double.isNaN(numerator) || Double.isNaN(denominator)) {
+			return null;
+		} else {
+			double prediction = usersAvgRating + (numerator/denominator);
+			
+			if (prediction >= 5) {
+				return 5.0;
+			} else if (prediction <= 0) {
+				return 0.0;
+			} else {
+				return prediction;
+			}
+			
+		}
 	}
 	
-	
 	public List<Recommendation> getMovieRecommendations(User user, int threshold) {
-		
+		//I'll first need to get the list of movies that a given user has NOT seen
+		//Then, for each movie, run the getPrediction() method, and store that in a list
+		//of recommendations.  Then sort by predicted rating, descending, and return the
+		//n-highest (as defined by threshold).
+		List<Recommendation> recommendations = new ArrayList<>();
+		Map<Movie, Double> moviesUserHasSeen = user.getMovieRatings();
+		for (Movie movie : moviesAndRatings) {
+			if (!moviesUserHasSeen.containsKey(movie)) {
+				boolean isInternalCall = true;
+				Double predictedRating = getPrediction(user, movie, 2, isInternalCall);
+				if (predictedRating != null) {
+					recommendations.add(new Recommendation(movie, predictedRating));
+				}
+			}
+			if (recommendations.size() >= threshold) {
+				break;
+			}
+		}
 		log.setMessage("MovieRatingsPredictor::getMovieRecommendations returned a List of Recommendations.");
 		log.printToLog();
-		return null;
+		Collections.sort(recommendations);
+		return recommendations;
 	}
 
 	/**
@@ -78,6 +123,20 @@ public class MovieRatingsPredictor {
 	 */
 	public Set<User> getUsersAndRatings() {
 		return usersAndRatings;
+	}
+
+	/**
+	 * @return the userIDToUserMap
+	 */
+	public Map<Integer, User> getUserIDToUserMap() {
+		return userIDToUserMap;
+	}
+
+	/**
+	 * @return the movieIDToMovieMap
+	 */
+	public Map<Integer, Movie> getMovieIDToMovieMap() {
+		return movieIDToMovieMap;
 	}
 
 }

@@ -5,18 +5,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MovieNamesDATMapper {
+public class MovieNameDATMapper extends MovieNameMapper {
 	private String fileName;
 	private Logger log;
 	
-	public MovieNamesDATMapper(String fileName) {
+	public MovieNameDATMapper(String fileName) {
 		this.fileName = fileName;
 		log = Logger.getInstance();
 		log.setMessage("MovieNamesDATMapper::MovieNamesDATMapper instantiated.");
 		log.printToLog();
 	}
 
-	public Map<Movie, String> read() {
+	@Override
+	public Map<Movie, String> map() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
 			Map<Movie, String> movies = new HashMap<>();
@@ -36,5 +37,4 @@ public class MovieNamesDATMapper {
 			return null;
 		}
 	}
-
 }
