@@ -7,20 +7,20 @@
  * @author sgb
  *
  */
-public class MovieNameMapperFactory {
-	private MovieNameMapper mapper;
-	private ReaderUtility utils;
+public class MovieNamerFactory {
+	private MovieNamer mapper;
+	private ParsingUtilities utils;
 	
-	public MovieNameMapperFactory() {
-		utils = new ReaderUtility();
+	public MovieNamerFactory() {
+		utils = new ParsingUtilities();
 	}
 	
-	public MovieNameMapper createMapper(String movieNameFile) {
-		//determine the file type
+	public MovieNamer createNamer(String movieNameFile) {
+		
 		String fileType = utils.parseWord("\\.[a-zA-Z0-9]*$", movieNameFile);
-		//build the correct reader
+
 		if (fileType.equalsIgnoreCase(".dat")) {
-			mapper = new MovieNameDATMapper(movieNameFile);
+			mapper = new MovieNamerDAT(movieNameFile);
 		} else {
 			throw new IllegalArgumentException("Sorry, but only '.dat' files are currently supported.");
 		}

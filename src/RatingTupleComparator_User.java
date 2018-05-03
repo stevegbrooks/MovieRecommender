@@ -5,7 +5,7 @@ import java.util.Comparator;
  * @author sgb
  *
  */
-public class RatingUserIDComparator implements Comparator<RatingTuple> {
+public class RatingTupleComparator_User implements Comparator<RatingTuple> {
 
 	@Override
 	public int compare(RatingTuple o1, RatingTuple o2) {

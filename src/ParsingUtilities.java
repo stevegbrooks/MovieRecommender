@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
  * 
  * @author sgb
  */
-public class ReaderUtility {
+public class ParsingUtilities {
 
 	/**
 	 * This method attempts to parse a String

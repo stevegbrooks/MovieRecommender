@@ -11,12 +11,12 @@ import java.util.Set;
  *
  */
 public class SimilarityEngine {
-	private Logger log;
+	private Log log;
 	/**
 	 * Constructor for SimilarityEngine
 	 */
 	public SimilarityEngine() {
-		log = Logger.getInstance();
+		log = Log.getInstance();
 		log.setMessage("UserSimilarityEngine::UserSimilarityEngine instantiated.");
 		log.printToLog();
 	}

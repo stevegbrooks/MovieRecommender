@@ -1,11 +1,13 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * POJO to represent a Movie
  * @author sgb
  */
-public class Movie implements Comparable<Movie> {
+public class Movie implements Observer, Comparable<Movie>{
 	private int movieID;
 	private String movieName;
 	private Map<User, Double> userRatings;
@@ -97,5 +99,10 @@ public class Movie implements Comparable<Movie> {
 		}
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void update(Observable o, Object arg) {
+		Map<Movie, String> names = (Map<Movie, String>) arg;
+		movieName = names.get(this);
+	}
 }

@@ -17,22 +17,21 @@ import java.util.Set;
  * @author sgb
  *
  */
-public class MovieRatingsDataStore {
-	//for the ratings file
+public class DataStore {
+
 	private RatingTupleReaderFactory ratingTupleReaderFactory;
 	private RatingTupleReader ratingTupleReader;
 	private List<RatingTuple> ratings;
-	//for the movie names file
-	private MovieNameMapperFactory movieNameMapperFactory;
-	private MovieNameMapper movieNameMapper;
-	private Map<Movie, String> movieNames;
-	//things this class creates and stores
+
+	private MovieNamerFactory movieNamerFactory;
+	private MovieNamer movieNamer;
+
 	private Set<User> usersAndRatings;
 	private Set<Movie> moviesAndRatings;
-	private Map<Integer, User> userIDToUserMap;
-	private Map<Integer, Movie> movieIDToMovieMap;
-	//logger singleton
-	private Logger log;
+	private Map<Integer, User> userIDToUser;
+	private Map<Integer, Movie> movieIDToMovie;
+
+	private Log log;
 	
 	/**
 	 * This is a busy constructor. Basically a client just needs to instantiate
@@ -40,28 +39,28 @@ public class MovieRatingsDataStore {
 	 * @param ratingsFile
 	 * @param movieNamesFile
 	 */
-	public MovieRatingsDataStore(String ratingsFile, String movieNamesFile) {
-		log = Logger.getInstance();
+	public DataStore(String ratingsFile, String movieNamesFile) {
+		log = Log.getInstance();
 		log.setMessage("DataManager::DataManager instantiated.");
 		log.printToLog();
 		
-		//for the ratings file
 		ratingTupleReaderFactory = new RatingTupleReaderFactory();
 		ratingTupleReader = ratingTupleReaderFactory.createReader(ratingsFile);
-		//for the movie names file
-		movieNameMapperFactory = new MovieNameMapperFactory();
-		movieNameMapper = movieNameMapperFactory.createMapper(movieNamesFile);
-		//get the data
+
+		movieNamerFactory = new MovieNamerFactory();
+		movieNamer = movieNamerFactory.createNamer(movieNamesFile);
+
 		ratings = ratingTupleReader.read();
-		movieNames = movieNameMapper.map();
 		
-		//create data layers
 		usersAndRatings = new HashSet<>();
-		userIDToUserMap = new HashMap<Integer, User>();
+		userIDToUser = new HashMap<Integer, User>();
 		usersAndRatings = createUsersAndRatingsDataLayer();
+		
 		moviesAndRatings = new HashSet<>();
-		movieIDToMovieMap = new HashMap<Integer, Movie>();
+		movieIDToMovie = new HashMap<Integer, Movie>();
 		moviesAndRatings = createMoviesAndRatingsDataLayer();
+		
+		movieNamer.nameMovies();
 	}
 	/**
 	 * Creates a Set of type User, and sets all User objects with a 
@@ -69,7 +68,7 @@ public class MovieRatingsDataStore {
 	 * @return Set<User>
 	 */
 	private Set<User> createUsersAndRatingsDataLayer() {
-		Collections.sort(ratings, new RatingUserIDComparator());
+		Collections.sort(ratings, new RatingTupleComparator_User());
 		Map<Movie, Double> movieRatings = new HashMap<>();
 		
 		User user = ratings.get(0).getUser();
@@ -86,30 +85,35 @@ public class MovieRatingsDataStore {
 			if (currentUser.compareTo(user) == 0 && iterationCounter < listLastIndex) {
 				
 				ratingTotal += rating.getRating();
+				
 				movieRatings.put(rating.getMovie(), rating.getRating());
 			
 			} else if (currentUser.compareTo(user) == 0 && iterationCounter == listLastIndex) {
 				
 				ratingTotal += rating.getRating();
+				
 				movieRatings.put(rating.getMovie(), rating.getRating());
+				
 				user.setMovieRatings(movieRatings);
 				user.setAvgRating(ratingTotal/movieRatings.size());
-				usersAndRatings.add(user);
 				
-				userIDToUserMap.put(userID, user);
+				usersAndRatings.add(user);
+				userIDToUser.put(userID, user);
 			
 			} else if (currentUser.compareTo(user) != 0) {
 				
 				user.setMovieRatings(movieRatings);
 				user.setAvgRating(ratingTotal/movieRatings.size());
-				usersAndRatings.add(user);
 				
-				userIDToUserMap.put(userID, user);
+				usersAndRatings.add(user);
+				userIDToUser.put(userID, user);
 				
 				movieRatings = new HashMap<>();
 				ratingTotal = 0;
 				ratingTotal += rating.getRating();
+				
 				movieRatings.put(rating.getMovie(), rating.getRating());
+				
 				user = currentUser;
 				userID = currentUserID;
 			
@@ -128,7 +132,7 @@ public class MovieRatingsDataStore {
 	 * @return Set<Movie>
 	 */
 	private Set<Movie> createMoviesAndRatingsDataLayer() {
-		Collections.sort(ratings, new RatingMovieIDComparator());
+		Collections.sort(ratings, new RatingTupleComparator_Movie());
 		Map<User, Double> userRatings = new HashMap<>();
 		
 		int listLastIndex = ratings.size() - 1;
@@ -136,13 +140,13 @@ public class MovieRatingsDataStore {
 		
 		Movie movie = ratings.get(0).getMovie();
 		int movieID = movie.getMovieID();
-		movie.setMovieName(movieNames.get(movie));
+		movieNamer.addObserver(movie);
 
 		for (RatingTuple rating : ratings) {
 			
 			Movie currentMovie = rating.getMovie();
 			int currentMovieID = currentMovie.getMovieID();
-			currentMovie.setMovieName(movieNames.get(currentMovie));
+			movieNamer.addObserver(currentMovie);
 			
 			if (currentMovie.compareTo(movie) == 0 && iterationCounter < listLastIndex) {
 				
@@ -153,24 +157,24 @@ public class MovieRatingsDataStore {
 				userRatings.put(rating.getUser(), rating.getRating());
 				movie.setUserRatings(userRatings);
 				moviesAndRatings.add(movie);
-				movieIDToMovieMap.put(movieID, movie);
+				movieIDToMovie.put(movieID, movie);
 				
 			} else if (currentMovie.compareTo(movie) != 0 && iterationCounter == listLastIndex) {
 				
 				movie.setUserRatings(userRatings);
 				moviesAndRatings.add(movie);
-				movieIDToMovieMap.put(movieID, movie);
+				movieIDToMovie.put(movieID, movie);
 				userRatings = new HashMap<>();
 				userRatings.put(rating.getUser(), rating.getRating());
 				currentMovie.setUserRatings(userRatings);
 				moviesAndRatings.add(currentMovie);
-				movieIDToMovieMap.put(currentMovieID, currentMovie);
+				movieIDToMovie.put(currentMovieID, currentMovie);
 			
 			} else if (currentMovie.compareTo(movie) != 0) {
 				
 				movie.setUserRatings(userRatings);
 				moviesAndRatings.add(movie);
-				movieIDToMovieMap.put(movieID, movie);
+				movieIDToMovie.put(movieID, movie);
 				userRatings = new HashMap<>();
 				userRatings.put(rating.getUser(), rating.getRating());
 				movie = currentMovie;
@@ -188,14 +192,14 @@ public class MovieRatingsDataStore {
 	 * @return the userIDToUserMap
 	 */
 	public Map<Integer, User> getUserIDToUserMap() {
-		return userIDToUserMap;
+		return userIDToUser;
 	}
 
 	/**
 	 * @return the movieIDToMovieMap
 	 */
 	public Map<Integer, Movie> getMovieIDToMovieMap() {
-		return movieIDToMovieMap;
+		return movieIDToMovie;
 	}
 
 	/**

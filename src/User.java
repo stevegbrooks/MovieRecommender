@@ -56,9 +56,6 @@ public class User implements Comparable<User> {
 		return this.userID == user.getUserID();
 	}
 
-	/**
-	 * Hashcode function for adding to Set<User>
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -67,10 +64,6 @@ public class User implements Comparable<User> {
 		return result;
 	}
 
-	/**
-	 * Custom equals function for determining whether one User
-	 * object is the same as another - based on userID#.
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

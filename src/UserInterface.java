@@ -9,11 +9,11 @@ import java.util.Scanner;
  *
  */
 public class UserInterface {
-	private MovieRatingsPredictor mrp2;
+	private Predictor predictor;
 	private Scanner in;
-	private Map<Integer, User> userIDToUserMap;
-	private Map<Integer, Movie> movieIDToMovieMap;
-	private Logger log;
+	private Map<Integer, User> userIDToUser;
+	private Map<Integer, Movie> movieIDToMovie;
+	private Log log;
 	/**
 	 * UI Constructor - takes in file names 
 	 * @param ratingsFileName
@@ -21,10 +21,10 @@ public class UserInterface {
 	 */
 	public UserInterface(String ratingsFileName, String movieNamesFileName) {
 		System.out.println("Please be patient - reading files into memory...");
-		mrp2 = new MovieRatingsPredictor(ratingsFileName, movieNamesFileName);
-		userIDToUserMap = mrp2.getUserIDToUserMap();
-		movieIDToMovieMap = mrp2.getMovieIDToMovieMap();
-		log = Logger.getInstance();
+		predictor = new Predictor(ratingsFileName, movieNamesFileName);
+		userIDToUser = predictor.getUserIDToUserMap();
+		movieIDToMovie = predictor.getMovieIDToMovieMap();
+		log = Log.getInstance();
 		log.setMessage("UserInterface::UserInterface instantiated.");
 		log.printToLog();
 		System.out.println("===========================================================");
@@ -112,7 +112,7 @@ public class UserInterface {
 			} else {
 				try {
 					boolean isInternalCall = false;
-					prediction = mrp2.getPrediction(userOfInterest, movieOfInterest, neighborhoodSize, isInternalCall);
+					prediction = predictor.getPrediction(userOfInterest, movieOfInterest, neighborhoodSize, isInternalCall);
 				} catch (IllegalArgumentException iae) {
 					System.out.println(iae.getMessage());
 					System.out.println("===========================================================");
@@ -162,7 +162,7 @@ public class UserInterface {
 				break;
 			} else {
 				try {
-					recommendations = mrp2.getMovieRecommendations(userOfInterest, threshold);
+					recommendations = predictor.getMovieRecommendations(userOfInterest, threshold);
 				} catch (IllegalArgumentException iae) {
 					System.out.println(iae.getMessage());
 					System.out.println("===========================================================");
@@ -199,7 +199,7 @@ public class UserInterface {
 		} catch (NumberFormatException nfe) {
 			System.out.println("Please enter an integer for User ID#");
 		}
-		output = userIDToUserMap.get(userID);
+		output = userIDToUser.get(userID);
 		return output;
 	}
 	/**
@@ -215,7 +215,7 @@ public class UserInterface {
 		} catch (NumberFormatException nfe) {
 			System.out.println("Please enter an integer for Movie ID#");
 		}
-		output = movieIDToMovieMap.get(movieID);
+		output = movieIDToMovie.get(movieID);
 		return output;
 	}
 }

@@ -9,18 +9,17 @@
  */
 public class RatingTupleReaderFactory {
 	private RatingTupleReader reader;
-	private ReaderUtility utils;
+	private ParsingUtilities utils;
 	
 	public RatingTupleReaderFactory() {
-		utils = new ReaderUtility();
+		utils = new ParsingUtilities();
 	}
 	
 	public RatingTupleReader createReader(String ratingsFileName) {
-		//determine the file type
 		String fileType = utils.parseWord("\\.[a-zA-Z0-9]*$", ratingsFileName);
-		//build the correct reader
+
 		if (fileType.equalsIgnoreCase(".dat")) {
-			reader = new RatingTupleDATReader(ratingsFileName);
+			reader = new RatingTupleReaderDAT(ratingsFileName);
 		} else {
 			throw new IllegalArgumentException("Sorry, but only '.dat' files are currently supported.");
 		}

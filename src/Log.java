@@ -11,15 +11,15 @@ import java.time.Instant;
  * @author sgb
  *
  */
-public class Logger {
-	public static Logger instance;
+public class Log {
+	public static Log instance;
 	@SuppressWarnings("unused")
 	private FileWriter fileWriter;
 	private static String fileName;
 	private File log;
 	private String message;
 	
-	private Logger(String message) {
+	private Log(String message) {
 		instance = this;
 		this.message = message;
 		fileName = "log.txt";
@@ -32,16 +32,16 @@ public class Logger {
 		}
 	}
 	
-	public static Logger getInstance() {
+	public static Log getInstance() {
 		if (instance == null) {
-			instance = new Logger("You haven't instantiated the Logger yet.");
+			instance = new Log("You haven't instantiated the Logger yet.");
 		}
 		return instance;
 	}
 	
 	public void printToLog() {
 		try {
-			FileWriter fileWriter = new FileWriter(Logger.fileName, true);
+			FileWriter fileWriter = new FileWriter(Log.fileName, true);
 			fileWriter.write(Instant.now() + "::" + message);
 			fileWriter.write(String.format("%n"));
 			fileWriter.close();

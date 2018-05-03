@@ -9,13 +9,13 @@ import java.util.List;
  * @author sgb
  *
  */
-public class RatingTupleDATReader extends RatingTupleReader {
+public class RatingTupleReaderDAT extends RatingTupleReader {
 	private String fileName;
-	private Logger log;
+	private Log log;
 	
-	public RatingTupleDATReader(String fileName) {
+	public RatingTupleReaderDAT(String fileName) {
 		this.fileName = fileName;
-		log = Logger.getInstance();
+		log = Log.getInstance();
 		log.setMessage("RatingDATReader::RatingDATReader instantiated.");
 		log.printToLog();
 	}
@@ -34,7 +34,8 @@ public class RatingTupleDATReader extends RatingTupleReader {
 				int currentMovieID = Integer.parseInt(ls[1]);
 				double currentRating = Double.parseDouble(ls[2]);
 				
-				ratings.add(new RatingTuple(new User(currentUserID), new Movie(currentMovieID), currentRating));
+				ratings.add(new RatingTuple(new User(currentUserID), 
+						new Movie(currentMovieID), currentRating));
 			}
 			br.close();
 			log.setMessage("RatingDATReader::Ratings file successfully read.");

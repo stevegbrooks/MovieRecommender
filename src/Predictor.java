@@ -7,31 +7,31 @@ import java.util.Set;
 /**
  * This class will house the getPrediction() and
  * getMovieRecommendations() methods, and act as the 
- * layer between the data and the user.
+ * layer between the data and the user. This is the 'Controller'.
  * 
  * @author sgb
  *
  */
-public class MovieRatingsPredictor {
-	private MovieRatingsDataStore dataStore;
+public class Predictor {
+	private DataStore dataStore;
 	private Set<User> usersAndRatings;
 	private Set<Movie> moviesAndRatings;
-	private Map<Integer, User> userIDToUserMap;
-	private Map<Integer, Movie> movieIDToMovieMap;
+	private Map<Integer, User> userIDToUser;
+	private Map<Integer, Movie> movieIDToMovie;
 	private SimilarityEngine similarityEngine;
-	private Logger log;
+	private Log log;
 	
-	public MovieRatingsPredictor(String ratingsFileName, String moviesFileName) {
-		dataStore = new MovieRatingsDataStore(ratingsFileName, moviesFileName);
+	public Predictor(String ratingsFileName, String moviesFileName) {
+		dataStore = new DataStore(ratingsFileName, moviesFileName);
 		
 		usersAndRatings = dataStore.getUsersAndRatings();
 		moviesAndRatings = dataStore.getMoviesAndRatings();
-		userIDToUserMap = dataStore.getUserIDToUserMap();
-		movieIDToMovieMap = dataStore.getMovieIDToMovieMap();
+		userIDToUser = dataStore.getUserIDToUserMap();
+		movieIDToMovie = dataStore.getMovieIDToMovieMap();
 		
 		similarityEngine = new SimilarityEngine();
 		
-		log = Logger.getInstance();
+		log = Log.getInstance();
 		log.setMessage("MovieRatingsPredictor::MovieRatingsPredictor instantiated");
 		log.printToLog();
 	}
@@ -143,14 +143,14 @@ public class MovieRatingsPredictor {
 	 * @return the userIDToUserMap
 	 */
 	public Map<Integer, User> getUserIDToUserMap() {
-		return userIDToUserMap;
+		return userIDToUser;
 	}
 
 	/**
 	 * @return the movieIDToMovieMap
 	 */
 	public Map<Integer, Movie> getMovieIDToMovieMap() {
-		return movieIDToMovieMap;
+		return movieIDToMovie;
 	}
 
 }
