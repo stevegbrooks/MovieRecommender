@@ -25,8 +25,8 @@ public class UserInterface {
 		userIDToUser = predictor.getUserIDToUserMap();
 		movieIDToMovie = predictor.getMovieIDToMovieMap();
 		log = Log.getInstance();
-		log.setMessage("UserInterface::UserInterface instantiated.");
-		log.printToLog();
+		log.print("UserInterface::UserInterface instantiated.");
+		log.close();
 		System.out.println("===========================================================");
 	}
 	/**

@@ -10,9 +10,13 @@
 public class MovieNamerFactory {
 	private MovieNamer mapper;
 	private ParsingUtilities utils;
+	private Log log;
 	
 	public MovieNamerFactory() {
 		utils = new ParsingUtilities();
+		log = Log.getInstance();
+		log.print("MovieNamerFactory::MovieNamerFactory instantiated.");
+		log.close();
 	}
 	
 	public MovieNamer createNamer(String movieNameFile) {
@@ -21,6 +25,8 @@ public class MovieNamerFactory {
 
 		if (fileType.equalsIgnoreCase(".dat")) {
 			mapper = new MovieNamerDAT(movieNameFile);
+			log.print("MovieNamerFactory::MovieNamerFactory created a DAT version of the MovieNamer.");
+			log.close();
 		} else {
 			throw new IllegalArgumentException("Sorry, but only '.dat' files are currently supported.");
 		}

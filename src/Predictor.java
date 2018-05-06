@@ -32,8 +32,8 @@ public class Predictor {
 		similarityEngine = new SimilarityEngine();
 		
 		log = Log.getInstance();
-		log.setMessage("MovieRatingsPredictor::MovieRatingsPredictor instantiated");
-		log.printToLog();
+		log.print("MovieRatingsPredictor::MovieRatingsPredictor instantiated");
+		log.close();
 	}
 	/**
 	 * This method is used both internally by the getMovieRecommendation() method as well as 
@@ -82,8 +82,8 @@ public class Predictor {
 			denominator += Math.abs(neighborsCoeff);
 			
 		}
-		log.setMessage("MovieRatingsPredictor::getPredictor() returned a prediction.");
-		log.printToLog();
+		log.print("MovieRatingsPredictor::getPredictor() returned a prediction.");
+		log.close();
 		
 		if (denominator == 0 || Double.isNaN(numerator) || Double.isNaN(denominator)) {
 			return null;
@@ -126,8 +126,8 @@ public class Predictor {
 				break;
 			}
 		}
-		log.setMessage("MovieRatingsPredictor::getMovieRecommendations returned a List of Recommendations.");
-		log.printToLog();
+		log.print("MovieRatingsPredictor::getMovieRecommendations returned a List of Recommendations.");
+		log.close();
 		Collections.sort(recommendations);
 		return recommendations;
 	}

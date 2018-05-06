@@ -41,8 +41,8 @@ public class DataStore {
 	 */
 	public DataStore(String ratingsFile, String movieNamesFile) {
 		log = Log.getInstance();
-		log.setMessage("DataManager::DataManager instantiated.");
-		log.printToLog();
+		log.print("DataManager::DataManager instantiated.");
+		log.close();
 		
 		ratingTupleReaderFactory = new RatingTupleReaderFactory();
 		ratingTupleReader = ratingTupleReaderFactory.createReader(ratingsFile);
@@ -120,8 +120,8 @@ public class DataStore {
 			} 
 			iterationCounter++;
 		}
-		log.setMessage("DataManager::Successfully created 'Users and Movie Ratings' data layer.");
-		log.printToLog();
+		log.print("DataManager::Successfully created 'Users and Movie Ratings' data layer.");
+		log.close();
 		return usersAndRatings;
 	}
 	/**
@@ -183,8 +183,8 @@ public class DataStore {
 			}
 			iterationCounter++;
 		}
-		log.setMessage("DataManager::Successfully created 'Movies and User Ratings' data layer.");
-		log.printToLog();
+		log.print("DataManager::Successfully created 'Movies and User Ratings' data layer.");
+		log.close();
 		return moviesAndRatings;
 	}
 	

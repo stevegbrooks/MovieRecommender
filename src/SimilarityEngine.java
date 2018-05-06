@@ -17,8 +17,8 @@ public class SimilarityEngine {
 	 */
 	public SimilarityEngine() {
 		log = Log.getInstance();
-		log.setMessage("UserSimilarityEngine::UserSimilarityEngine instantiated.");
-		log.printToLog();
+		log.print("SimilarityEngine::SimilarityEngine instantiated.");
+		log.close();
 	}
 	/**
 	 * This method uses the getPearsonCorrelation method, and creates a List<Neighbor> based
@@ -60,7 +60,8 @@ public class SimilarityEngine {
 			List<Neighbor> neighborhoodSlice = neighborhood.subList(0, neighborhoodSize);
 			return neighborhoodSlice;
 		}
-		
+		log.print("SimilarityEngine::SimilarityEngine returned a neighborhood.");
+		log.close();
 		return neighborhood;
 	}
 	/**
@@ -104,6 +105,8 @@ public class SimilarityEngine {
 		if (Double.isNaN(prediction)) {
 			return null;
 		} else {
+			log.print("SimilarityEngine::SimilarityEngine returned a prediction: " + prediction);
+			log.close();
 			if (prediction >= 1) {
 				return 1.0;
 			} else if (prediction <= -1) {

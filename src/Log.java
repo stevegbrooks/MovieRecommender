@@ -17,11 +17,9 @@ public class Log {
 	private FileWriter fileWriter;
 	private static String fileName;
 	private File log;
-	private String message;
 	
 	private Log(String message) {
 		instance = this;
-		this.message = message;
 		fileName = "log.txt";
 		log = new File(fileName);
 		
@@ -39,7 +37,7 @@ public class Log {
 		return instance;
 	}
 	
-	public void printToLog() {
+	public void print(String message) {
 		try {
 			FileWriter fileWriter = new FileWriter(Log.fileName, true);
 			fileWriter.write(Instant.now() + "::" + message);
@@ -51,8 +49,12 @@ public class Log {
 		
 	}
 	
-	public void setMessage(String message) {
-		this.message = message;
+	public void close() {
+		try {
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

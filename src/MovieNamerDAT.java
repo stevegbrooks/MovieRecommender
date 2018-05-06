@@ -25,8 +25,8 @@ public class MovieNamerDAT extends MovieNamer {
 		state = false;
 
 		log = Log.getInstance();
-		log.setMessage("MovieNamesDATMapper::MovieNamesDATMapper instantiated.");
-		log.printToLog();
+		log.print("MovieNamesDATMapper::MovieNamesDATMapper instantiated.");
+		log.close();
 	}
 
 	@Override
@@ -41,8 +41,8 @@ public class MovieNamerDAT extends MovieNamer {
 				moviesAndNames.put(new Movie(movieID), movieName);
 			}
 			br.close();
-			log.setMessage("MovieNamesDATMapper::Movie names file successfully read.");
-			log.printToLog();
+			log.print("MovieNamesDATMapper::Movie names file successfully read.");
+			log.close();
 			state = true;
 			notifyObservers();
 			return moviesAndNames;

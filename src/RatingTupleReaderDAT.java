@@ -16,8 +16,8 @@ public class RatingTupleReaderDAT extends RatingTupleReader {
 	public RatingTupleReaderDAT(String fileName) {
 		this.fileName = fileName;
 		log = Log.getInstance();
-		log.setMessage("RatingDATReader::RatingDATReader instantiated.");
-		log.printToLog();
+		log.print("RatingDATReader::RatingDATReader instantiated.");
+		log.close();
 	}
 	
 	@Override
@@ -38,8 +38,8 @@ public class RatingTupleReaderDAT extends RatingTupleReader {
 						new Movie(currentMovieID), currentRating));
 			}
 			br.close();
-			log.setMessage("RatingDATReader::Ratings file successfully read.");
-			log.printToLog();
+			log.print("RatingDATReader::Ratings file successfully read.");
+			log.close();
 			return ratings;
 		} catch (IOException e) {
 			System.out.println("ERROR: IO Exception on movie dat input file - " + fileName);
